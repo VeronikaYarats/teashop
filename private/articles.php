@@ -96,6 +96,7 @@ function article_edit($id, $array_params)
         dbg_err("Incorrect id"); 
         return EINVAL;
     }
+    
     if(!isset($array_params["page_title"])) { 
         dbg_err("Not set page title");    
         return EINVAL;    
@@ -131,6 +132,35 @@ function article_edit($id, $array_params)
     	return EBASE;
     } else 
         return 0;
+}
+
+
+/**
+ * удаляет запись с идентификатором $id
+ * @param $id идентификатор записи которую нужно удалить
+ * @return EINVAL в случае ошибки входных параметров
+ * @return EBASE в случае ошибки связи с базой
+ * @return 0 в случае успешного удаления записи
+ */     
+
+function article_del($id)
+{
+    global $table_name;
+    
+	if (!is_numeric($id) || !isset($id)) {
+        dbg_err("Incorrect id"); 
+        return EINVAL;
+    }
+      
+    if (article_get_by_id($id) <= 0) {
+        exit;
+    }
+
+    $query = "DELETE FROM ". $table_name . " WHERE id = " . $id;
+    if(!db_query($query)){
+        dbg_err("Can not delete article");
+    return EBASE;
+    }
 }
 
 ?>
