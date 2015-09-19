@@ -1,1 +1,34 @@
-/* Каркас сайта с шапкой */
+/*  скелет страницы сайта */
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="content-type">
+        <link rel="stylesheet" type="text/css" href="{http_css}common.css">
+        <title>{title}</title>
+    </head>
+    <body>
+    
+        <div id="container">
+            <div id="header">
+                <ul class="nav">
+                    <li><a href="index.php"> Главная </a> </li>
+                    <li><a href="index.php?mod={product}"> Продукты </a> </li>
+                    <li><a href="index.php?mod=about_us&article_id=38"> О нас </a> </li>
+                    <li><a href="index.php?mod={contacts}"> Контакты </a> </li>
+                </ul>   
+                    /* блок администрировани */
+                    <!-- START BLOCK : admin_menu --> 
+                <ul class="nav">
+                    <li><a href="index.php?mod=adm_articles"> Статьи </a> </li>
+                    <li><a href="index.php?mod=adm_products"> продукты </a> </li>
+                </ul>   
+                    <!-- END BLOCK : admin_menu -->                           
+            </div>
+                 <div align="center">
+                  <!-- START INSERT : message_boxes.html --> <!-- END INSERT : message_boxes.html -->
+                 {page_content}
+                </div>
+        </div>
+
+
+    </body>
+</html>
