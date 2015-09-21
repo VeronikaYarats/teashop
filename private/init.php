@@ -3,32 +3,19 @@
 /* Список стандартных кодов возврата */
 define("EINVAL", -1); // Ошибка во входных аргументах
 define("EBASE", -2); // Ошибка связи с базой
-define("ENOTUNIQUE", -3); // Ошибка добавления в базу, если такая запись уже существует
+define("ENOTUNIQUE", -4); // Ошибка добавления в базу, если такая запись уже существует
 define('HTTP_ROOT_PATH', '/veroshop/'); //путь к файлам
 
 
-$link = NULL;
 $host = '127.0.0.1  ';
 $user = 'admin';
 $pass = '13941';
 $database = 'veroshop';
 $port = 3306;
 
-/**
- * Открывает соединение с базой данных
- * @return EBASE - в случае ошибки 
- *         1 - вслучае успеха
- */
-function db_init($host, $user, $pass, $database, $port)
-{
-    global $link;
-    $link = mysqli_connect($host, $user, $pass, $database, $port);
-    if(!link)
-        return EBASE;
-    else 
-        return 1;
-}
+/* Открывает соединение с базой данных */
 db_init($host, $user, $pass, $database, $port);
+
 
 
 /* Глобальные метки для путей к файлам */

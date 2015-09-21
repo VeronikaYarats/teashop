@@ -1,98 +1,114 @@
 <?php
-/* àçîâûå ôóíêöèè äëß ðàáîòû ñ áä */
+/* Ð‘Ð°Ð·Ð¾Ð²Ñ‹Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð´Ð»Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ Ð±Ð´ */
+$link = NULL;
 
 /**
- * ‚ûïîëíßåò çàïðîñ
- *@param $query - çàïðîñ
- *@return 1 - åñëè çàïðîñ óñïåøíî
- *        EBASE - åñëè çàïðîñ íå âûïîëíåí
- *        data - âîçâðàùàåò àññîöèàòèâíûé ìàññèâ êàê ðåçóëüòàò çàïðîñà
+ * ÐžÑ‚ÐºÑ€Ñ‹Ð²Ð°ÐµÑ‚ ÑÐ¾ÐµÐ´Ð¸Ð½ÐµÐ½Ð¸Ðµ Ñ Ð±Ð°Ð·Ð¾Ð¹ Ð´Ð°Ð½Ð½Ñ‹Ñ…
+ * @return EBASE - Ð² ÑÐ»ÑƒÑ‡Ð°Ðµ Ð¾ÑˆÐ¸Ð±ÐºÐ¸ 
+ *         1 - Ð²ÑÐ»ÑƒÑ‡Ð°Ðµ ÑƒÑÐ¿ÐµÑ…Ð°
+ */
+function db_init($host, $user, $pass, $database, $port)
+{
+    global $link;
+    $link = mysqli_connect($host, $user, $pass, $database, $port);
+    if(!link)
+        return EBASE;
+    else 
+        return 1;
+}
+
+/**
+ * Ð’Ñ‹Ð¿Ð¾Ð»Ð½ÑÐµÑ‚ Ð·Ð°Ð¿Ñ€Ð¾Ñ
+ *@param $query - Ð·Ð°Ð¿Ñ€Ð¾Ñ
+ *@return 1 - ÐµÑÐ»Ð¸ Ð·Ð°Ð¿Ñ€Ð¾Ñ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾
+ *        EBASE - ÐµÑÐ»Ð¸ Ð·Ð°Ð¿Ñ€Ð¾Ñ Ð½Ðµ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½
+ *        data - Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð°ÑÑÐ¾Ñ†Ð¸Ð°Ñ‚Ð¸Ð²Ð½Ñ‹Ð¹ Ð¼Ð°ÑÑÐ¸Ð² ÐºÐ°Ðº Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ°
  */
 function db_query($query)
 {
-	global $link;
-	$data = array();
-	$row = array();
-	
-	$result = mysqli_query($link, $query);
-	if($result === TRUE)
-		return 1;
-	if($result === FALSE)
-		return EBASE;
-		
-	while($row = mysqli_fetch_assoc($result))
-		$data[] = $row;
-	return $data;
+    global $link;
+    $data = array();
+    $row = array();
+    
+    $result = mysqli_query($link, $query);
+    if($result === TRUE)
+        return 1;
+    if($result === FALSE)
+        return EBASE;
+        
+    while($row = mysqli_fetch_assoc($result))
+        $data[] = $row;
+    return $data;
 }
 
 
 /** 
- * „îáàâëßåò çàïèñü â „
- * @param $table_name - èìß òàáëèöû äëß äîáàâëåíèß
- * @param $array - ìàññèâ äàííûõ äëß äîáàâëåíèß
- * @return EBASE - â ñëó÷àå íåóäà÷è
- * @return $id - âîçâðàùàåò id âñòàâëåííîé çàïèñè
+ * Ð”Ð¾Ð±Ð°Ð²Ð»ÑÐµÑ‚ Ð·Ð°Ð¿Ð¸ÑÑŒ Ð² Ð‘Ð”
+ * @param $table_name - Ð¸Ð¼Ñ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð´Ð»Ñ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ
+ * @param $array - Ð¼Ð°ÑÑÐ¸Ð² Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð´Ð»Ñ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ñ
+ * @return EBASE - Ð² ÑÐ»ÑƒÑ‡Ð°Ðµ Ð½ÐµÑƒÐ´Ð°Ñ‡Ð¸
+ * @return $id - Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ id Ð²ÑÑ‚Ð°Ð²Ð»ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð¿Ð¸ÑÐ¸
  */
 function db_insert($table_name, $array)
 {
-	
-	global $link;
-	$query = "INSERT INTO " . $table_name . " SET ";
-	$separator = '';
-	foreach ($array as $field => $value) {
-		if($field == 'id')
-			continue;
-		$query .= $separator . $field . ' = "' . $value . '"';
-		$separator = ',';
-	}
-	$result = mysqli_query($link, $query);
-	if($result === FALSE)
-		return EBASE;
-	else
-		return mysqli_insert_id($link);
+    
+    global $link;
+    $query = "INSERT INTO " . $table_name . " SET ";
+    $separator = '';
+    foreach ($array as $field => $value) {
+        if($field == 'id')
+            continue;
+        $query .= $separator . $field . ' = "' . $value . '"';
+        $separator = ',';
+    }
+    $result = mysqli_query($link, $query);
+    if($result === FALSE)
+        return EBASE;
+    else
+        return mysqli_insert_id($link);
 }
 
 
 
 /**
- * Žáíîâëßåò äàííûå â „ ñ óêàçàííûì id
- * @param $table - èìß òàáëèöû äëß îáíîâëåíèß
- * @param $id - id çàïèñè äëß îáíîâëåíèß
- * @param $array - ìàññèâ äàííûõ äëß îáíîâëåíèß
- * @return EBASE - â ñëó÷àå íåóäà÷è
- *         0 - â ñëó÷àå óäà÷íîãî îáíîâëåíèß
+ * ÐžÐ±Ð½Ð¾Ð²Ð»ÑÐµÑ‚ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð² Ð‘Ð” Ñ ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ñ‹Ð¼ id
+ * @param $table - Ð¸Ð¼Ñ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð´Ð»Ñ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ñ
+ * @param $id - id Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð´Ð»Ñ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ñ
+ * @param $array - Ð¼Ð°ÑÑÐ¸Ð² Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð´Ð»Ñ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ñ
+ * @return EBASE - Ð² ÑÐ»ÑƒÑ‡Ð°Ðµ Ð½ÐµÑƒÐ´Ð°Ñ‡Ð¸
+ *         0 - Ð² ÑÐ»ÑƒÑ‡Ð°Ðµ ÑƒÐ´Ð°Ñ‡Ð½Ð¾Ð³Ð¾ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ñ
  */
 function db_update($table, $id, $array)
 {
-	global $link;
-	$separator = '';
-	$query = "UPDATE " . $table . " SET "; 
-	foreach($array as $field	 => $value) {
-		$query .= $separator . $field . ' = "' . $value . '"';
-		$separator = ',';
-	}
-	$query .= " WHERE id = " . $id;
-	$update = mysqli_query($link, $query);
-	if($update)
-	   return 0;
-	else 
-	   return EBASE;
-	
+    global $link;
+    $separator = '';
+    $query = "UPDATE " . $table . " SET "; 
+    foreach($array as $field     => $value) {
+        $query .= $separator . $field . ' = "' . $value . '"';
+        $separator = ',';
+    }
+    $query .= " WHERE id = " . $id;
+    $update = mysqli_query($link, $query);
+    if($update)
+       return 0;
+    else 
+       return EBASE;
+    
 }
 
 
 /**
- * ‡àêðûâàåò ðàíåå îòêðûòîå ñîåäèíåíèå ñ áàçîé äàííûõ
- * @return EBASE - â ñëó÷àå îøèáêè
- * @return 1 - â ñëó÷àå óñïåõà
+ * Ð—Ð°ÐºÑ€Ñ‹Ð²Ð°ÐµÑ‚ Ñ€Ð°Ð½ÐµÐµ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚Ð¾Ðµ ÑÐ¾ÐµÐ´Ð¸Ð½ÐµÐ½Ð¸Ðµ Ñ Ð±Ð°Ð·Ð¾Ð¹ Ð´Ð°Ð½Ð½Ñ‹Ñ…
+ * @return EBASE - Ð² ÑÐ»ÑƒÑ‡Ð°Ðµ Ð¾ÑˆÐ¸Ð±ÐºÐ¸
+ * @return 1 - Ð² ÑÐ»ÑƒÑ‡Ð°Ðµ ÑƒÑÐ¿ÐµÑ…Ð°
  */
 function db_close()
 {
-	global $link;
-	if(!mysqli_close($link))
-	   return EBASE;
-	else 
-	return 1;	
+    global $link;
+    if(!mysqli_close($link))
+       return EBASE;
+    else 
+        return 1;   
 }
 
 ?>
