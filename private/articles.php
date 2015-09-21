@@ -11,6 +11,7 @@ $table_name = "articles";
  * Получить ассоциативный массив с данными записи с идентификатором $id
  * @param $id идентификатор записи
  * @return EINVAL в случае ошибки входных параметров
+ * @return ESQL некорретного sql запроса
  * @return массив [индентификатор, имя страницы, имя, содержание, публикование]
  */
 function article_get_by_id($id)
@@ -26,8 +27,9 @@ function article_get_by_id($id)
     $result = db_query($query);
     
     if ($result == FALSE)  // если бд вернула 0 строк 
-        return EINVAL;
-    else return $result[0];
+        return ESQL;
+    else 
+        return $result[0];
 }	
 
 
@@ -41,7 +43,7 @@ function article_get_by_id($id)
  * @param [contents] - содержимое статьи
  * @param [public] - публикация статьи
  * @return EINVAL в случае ошибки входных параметров
- * @return EBASE в случае ошибки связи с базой
+ * @return ESQL в случае некорретного sql запроса
  * @return id в случае успешного добавления
  */
 function article_add_new($array_params)
@@ -75,8 +77,8 @@ function article_add_new($array_params)
         dbg_err("Not set public");    
         return EINVAL;    
     }
-     dump($data);
-     return db_insert($table_name, $data); 
+     else 
+        return db_insert($table_name, $data); 
     }
 
 
@@ -91,7 +93,7 @@ function article_add_new($array_params)
  * @param [contents] - содержимое статьи
  * @param [public] - публикация статьи
  * @return EINVAL в случае ошибки входных параметров
- * @return EBASE в случае ошибки связи с базой
+ * @return ESQL в случае некорретного sql запроса
  * @return 0 в случае успешного редактирования
  */
 function article_edit($id, $array_params)
@@ -142,7 +144,7 @@ function article_edit($id, $array_params)
  * удаляет запись с идентификатором $id
  * @param $id идентификатор записи которую нужно удалить
  * @return EINVAL в случае ошибки входных параметров
- * @return EBASE в случае ошибки связи с базой
+ * @return ESQL в случае некорретного sql запроса
  * @return 1 в случае успешного удаления записи
  */     
 
@@ -165,7 +167,7 @@ function article_del($id)
 
 /**
  * Получает все статьи бд
- * @return EBASE - если запрос не выполнен
+ * @return ESQL в случае некорретного sql запроса
  *         массив в случае успешного выполнения запроса
  */
 

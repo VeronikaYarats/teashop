@@ -1,17 +1,21 @@
 <?php
 /* Базовые функции для работы с бд */
-$link = NULL;
+$link = NULL; 
 
 /**
  * Открывает соединение с базой данных
  * @return EBASE - в случае ошибки 
  *         1 - вслучае успеха
  */
-function db_init($host, $user, $pass, $database, $port)
+function db_init($array=array())
 {
     global $link;
-    $link = mysqli_connect($host, $user, $pass, $database, $port);
-    if(!link)
+    $link = mysqli_connect($array['host'], 
+                           $array['user'], 
+                           $array['pass'], 
+                           $array['database'], 
+                           $array['port']);
+    if(!$link)
         return EBASE;
     else 
         return 1;
@@ -21,7 +25,7 @@ function db_init($host, $user, $pass, $database, $port)
  * Выполняет запрос
  *@param $query - запрос
  *@return 1 - если запрос успешно
- *        EBASE - если запрос не выполнен
+ *        ESQL - если запрос не выполнен
  *        data - возвращает ассоциативный массив как результат запроса
  */
 function db_query($query)
@@ -34,7 +38,7 @@ function db_query($query)
     if($result === TRUE)
         return 1;
     if($result === FALSE)
-        return EBASE;
+        return ESQL;
         
     while($row = mysqli_fetch_assoc($result))
         $data[] = $row;
@@ -46,7 +50,7 @@ function db_query($query)
  * Добавляет запись в БД
  * @param $table_name - имя таблицы для добавления
  * @param $array - массив данных для добавления
- * @return EBASE - в случае неудачи
+ * @return ESQL - в случае неудачи
  * @return $id - возвращает id вставленной записи
  */
 function db_insert($table_name, $array)
@@ -63,7 +67,7 @@ function db_insert($table_name, $array)
     }
     $result = mysqli_query($link, $query);
     if($result === FALSE)
-        return EBASE;
+        return ESQL;
     else
         return mysqli_insert_id($link);
 }
@@ -75,7 +79,7 @@ function db_insert($table_name, $array)
  * @param $table - имя таблицы для обновления
  * @param $id - id записи для обновления
  * @param $array - массив данных для обновления
- * @return EBASE - в случае неудачи
+ * @return ESQL - в случае неудачи
  *         0 - в случае удачного обновления
  */
 function db_update($table, $id, $array)
@@ -92,7 +96,7 @@ function db_update($table, $id, $array)
     if($update)
        return 0;
     else 
-       return EBASE;
+       return ESQL;
     
 }
 

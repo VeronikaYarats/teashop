@@ -33,8 +33,8 @@ if(isset($_POST['post_query']))
             		$block = "message_article_einval";
             		break;
             		
-            	case EBASE:
-            		$block = "message_article_ebase";
+            	case ESQL:
+            		$block = "message_article_esql";
             		break;
             }
             message_box_display($block, $data);
@@ -54,8 +54,8 @@ if(isset($_POST['post_query']))
                     $block = "message_article_einval";
                     break;
                     
-                case EBASE:
-                    $block = "message_article_ebase";
+                case ESQL:
+                    $block = "message_article_esql";
                     break;
 
                 default:
@@ -102,8 +102,8 @@ if(isset($_GET['get_query']))
                     $block = "message_article_einval";
                     break;
                     
-                case EBASE:
-                    $block = "message_article_ebase";
+                case ESQL:
+                    $block = "message_article_esql";
                     break;                   
             }
             message_box_display($block, $data);
