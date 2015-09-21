@@ -14,8 +14,11 @@ $database = 'veroshop';
 $port = 3306;
 
 /* Открывает соединение с базой данных */
-db_init($host, $user, $pass, $database, $port);
-
+$err = db_init($host, $user, $pass, $database, $port);
+if ($err < 0) {
+    dbg_err("Database connection fault");
+    exit;
+}
 
 
 /* Глобальные метки для путей к файлам */
