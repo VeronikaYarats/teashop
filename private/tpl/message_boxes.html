@@ -1,3 +1,5 @@
+/* Шаблон всплывающих сообщения */
+
 <!-- START BLOCK : message_article_success_edit -->
     <!-- START INSERT : message_box.html -->
         <color>green</color>
@@ -5,3 +7,44 @@
         <message>Статья с id: {article_id} успешно отредактирована!</message>
     <!-- END INSERT : message_box.html -->
 <!-- END BLOCK : message_article_success_edit -->
+
+<!-- START BLOCK : message_article_einval -->
+    <!-- START INSERT : message_box.html -->
+        <color>red</color>
+        <header>Error</header>
+        <message>Ошибка входных параметров</message>
+    <!-- END INSERT : message_box.html -->
+<!-- END BLOCK : message_article_einval -->
+
+<!-- START BLOCK : message_article_ebase -->
+    <!-- START INSERT : message_box.html -->
+        <color>red</color>
+        <header>Error</header>
+        <message>Ошибка связи с базой данных</message>
+    <!-- END INSERT : message_box.html -->
+<!-- END BLOCK : message_article_ebase -->
+
+<!-- START BLOCK : message_article_success_add_new -->
+    <!-- START INSERT : message_box.html -->
+        <color>green</color>
+        <header>Поздравляем!</header>
+        <message>Статья с id: {article_id} успешно добавлена!</message>
+    <!-- END INSERT : message_box.html -->
+<!-- END BLOCK : message_article_success_add_new -->
+
+<!-- START BLOCK : message_article_success_del -->
+    <!-- START INSERT : message_box.html -->
+        <color>green</color>
+        <header>Поздравляем!</header>
+        <message>Статья с id: {article_id} успешно удалена!</message>
+    <!-- END INSERT : message_box.html -->
+<!-- END BLOCK : message_article_success_del -->
+
+<!-- START BLOCK : message_adm_login_incorrect -->
+    <!-- START INSERT : message_box.html -->
+        <color>red</color>
+        <header>EROR</header>
+        <message>Неверно введен логин и/или пароль</message>
+    <!-- END INSERT : message_box.html -->
+<!-- END BLOCK : message_adm_login_incorrect -->
+
