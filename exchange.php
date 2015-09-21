@@ -16,6 +16,8 @@ if(isset($_POST['post_query']))
         /* Редактирование статьи */
         case "article_edit":
             $id = $_POST['article_id'];
+            if(!auth_get_admin())
+                continue;
             $public = isset($_POST['public']);
 
             $array = $_POST;
@@ -41,12 +43,12 @@ if(isset($_POST['post_query']))
             
         /* Добавление новой статьи */
         case "article_add":
+        	if(!auth_get_admin())
+                continue;
             $data = $_POST;
             $public = isset($_POST['public']);
             $data["public"] = $public;
             $article_id = article_add_new($data);
-            dump($_POST);
-            //dump($$article_id);
             switch ($article_id) {
             	case EINVAL:
                     $block = "message_article_einval";
@@ -86,6 +88,8 @@ if(isset($_GET['get_query']))
 
         /* Удаление статьи */
         case "del_article":
+        	if(!auth_get_admin())
+                continue;
             $id = $_GET['article_id'];
             $err = article_del($id);
             switch ($err) {

@@ -21,9 +21,7 @@ require_once "private/mods/m_adm_login.php";
 
 /* начальная инициализация системы */
 require_once "private/init.php";
-$data = array("page_title" => "ololo", "name" => "nome", "public" => 0, "contents" => "olololololo");
-//dump(article_add_new($data  ));
-//exit;
+
 session_start();
  
 
