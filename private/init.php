@@ -6,15 +6,15 @@ define("EBASE", -2); // Ошибка связи с базой
 define("ENOTUNIQUE", -4); // Ошибка добавления в базу, если такая запись уже существует
 define('HTTP_ROOT_PATH', '/veroshop/'); //путь к файлам
 
+/*  Глобальный массив параметров для соединения с бд */
+$db_connection_settings = array("host" => '127.0.0.1  ',
+                                "user" => 'admin',
+                                "pass" => '13941',
+                                "database" => 'veroshop');
 
-$host = '127.0.0.1  ';
-$user = 'admin';
-$pass = '13941';
-$database = 'veroshop';
-$port = 3306;
 
 /* Открывает соединение с базой данных */
-$err = db_init($host, $user, $pass, $database, $port);
+$err = db_init($db_connection_settings);
 if ($err < 0) {
     dbg_err("Database connection fault");
     exit;
