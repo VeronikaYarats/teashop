@@ -1,17 +1,17 @@
 <?php
 /**
- * “ñòàíàâëèâàåò title ñòðàíèöû
+ * Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÑ‚ title ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
  * @param title 
  */
 $page_title = "";
 function page_set_title($title)
 {
     global $page_title;
-    $page_title = $title;   	
+    $page_title = $title;       
 }
 
 /**
- * ‚îçâðàùàåò title còðàíèöû
+ * Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ title cÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹
  * 
  */
 function page_get_title()
