@@ -1,29 +1,29 @@
 <?php 
 /*
- *функции для отображения всплывающего окна с сообщением 
+ * Функции для отображения всплывающего окна с сообщением 
  */
-
-
 
 
 /**
- * @param $block название блока включения
- * @param $data массив данных
+ * Подготовка к выводу всплывающего окна с сообщением
+ * @param $block название блока из файла message_boxes.html с шаблоном сообщения
+ * @param $data массив меток для шаблона с сообщением
  */
-function display_message_box($block, $data)
+function message_box_display($block, $data = array())
 {
-     $_SESSION['display_window'] = array('name' => $block, 'data' => $data);
+    $_SESSION['display_window'] = array('name' => $block, 'data' => $data);
 }
 
-
 /**
- * Возвращает массив ($block - название блока
- *                    $data - массив данных)
+ * Функция возвращает данные всплывающего окна,
+ * если ранее была запущена функция message_box_display().
+ * Используется в index.php
  */
-function check_for_window()
+function message_box_check_for_display()
 {
     $block = $_SESSION['display_window']["name"];
     $data = $_SESSION['display_window']["data"];
+    unset($_SESSION['display_window']);
     return array('block' => $block, 'data' => $data);
 }
 ?>
