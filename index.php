@@ -1,46 +1,85 @@
 <?php
-require_once "exchange.php";
-// общие библиотеке
+
+/* общие библиотеки */
 require_once "private/common/debug.php";
 require_once "private/common/strontium_tpl.php";
 require_once "private/common/base_sql.php";
 require_once "private/common/common.php";
+require_once "private/common/message_box.php";
+require_once "private/common/auth_adm.php";
 
-//файлы сущностей
+/* файлы различных сущностей */
 require_once "private/articles.php";
 require_once "private/products.php";
 
-//режимы страниц
+/* режимы страниц */
 require_once "private/mods/m_adm_products.php";
 require_once "private/mods/m_adm_articles.php";
 require_once "private/mods/m_articles.php";
 require_once "private/mods/m_products.php";
+require_once "private/mods/m_adm_login.php";
 
-//инициализация бд
+/* начальная инициализация системы */
 require_once "private/init.php";
+$data = array("page_title" => "ololo", "name" => "nome", "public" => 0, "contents" => "olololololo");
+//dump(article_add_new($data  ));
+//exit;
+session_start();
+ 
 
-
-session_start();  
-       
-$mod = "main";
-$tpl = new strontium_tpl("private/tpl/skeleton.html", $global_marks, false);
-
-$tpl->assign();
-
-$win = check_for_window();
-if($win)
-    $tpl->assign($win['block'], $win['data']);  
-
+/* Выбор режима работы */
+$mod = "articles";
 if(isset($_GET['mod']))
-    $mod = $_GET['mod'];
+   $mod = $_GET['mod'];
+
+
+/* Попытка запуска административных режимов работы */
+$mod_content = '';
+if (auth_get_admin())
+    switch ($mod) {
+        case 'adm_articles':
+            $mod_content = m_adm_articles($_GET);
+            break;
+        default:
+        	$mod_content = m_articles();
+        
+    }
+
+/* Попытка запуска публичных режимов работы */
 switch ($mod) {
-   case 'adm_articles':
-		$tpl->assign("", array("page_content" => m_adm_articles()));
+	case 'adm_login':
+		if (auth_get_admin())
+		    break;
+		else
+            $mod_content = m_adm_login($_GET);
         break;
-}   
-$tpl->assign("admin_menu");
+    case 'articles':
+        $mod_content = m_articles($_GET);
+        break;
+    case 'products':
+      //  $mod_content = m_products($_GET);
+        break;
+}
+
+/* Если введен некорректный mode то вывод статьи по умолчанию */
+if (!$mod_content)
+      $mod_content = m_articles();
+
+/* Заполнение главного шаблона */
+$tpl = new strontium_tpl("private/tpl/skeleton.html", $global_marks, false);
+$tpl->assign(NULL, array('title' => page_get_title(),
+                         'mod_content' => $mod_content,
+                         ));  
+                                                
+/* Вывод всплывающего сообщения, если нужно */
+$win = message_box_check_for_display();
+if($win)
+   $tpl->assign($win['block'], $win['data']);
+   
+/* Вывод меню администратора если автозирован */   
+if(auth_get_admin())
+    $tpl->assign("admin_menu");   
 
 echo $tpl->result();
-unset($_SESSION['display_window']);
 
 ?>
