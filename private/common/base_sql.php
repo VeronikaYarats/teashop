@@ -63,7 +63,7 @@ function db_insert($table_name, $array)
     foreach ($array as $field => $value) {
         if($field == 'id')
             continue;
-        $query .= $separator . $field . ' = "' . $value . '"';
+        $query .= $separator . '`' .  $field . '`  = "' . $value . '"';
         $separator = ',';
     }
     $result = mysqli_query($link, $query);
@@ -89,7 +89,7 @@ function db_update($table, $id, $array)
     $separator = '';
     $query = "UPDATE " . $table . " SET "; 
     foreach($array as $field     => $value) {
-        $query .= $separator . $field . ' = "' . $value . '"';
+        $query .= $separator . '`' .  $field . '` = "' . $value . '"';
         $separator = ',';
     }
     $query .= " WHERE id = " . $id;

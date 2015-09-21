@@ -18,10 +18,8 @@ function article_get_by_id($id)
 {
     global $table_name;
     
-	if (!is_numeric($id) || !isset($id)) {
-		dbg_err("Incorrect id"); 
+	if (!is_numeric($id) || !isset($id))
         return EINVAL;
-	}
     
     $query = "SELECT * FROM ". $table_name .  " WHERE id = " . $id;
     $result = db_query($query);
@@ -32,6 +30,30 @@ function article_get_by_id($id)
         return $result[0];
 }	
 
+/**
+ * Получить ассоциативный массив с данными записи с ключом $key
+ * @param $key ключ записи
+ * @return EINVAL в случае ошибки входных параметров
+ * @return ESQL некорретного sql запроса
+ * @return массив [индентификатор, имя страницы, имя, содержание, публикование]
+ */
+function article_get_by_key($key)
+{
+    global $table_name;
+    
+    if (!isset($key)) {
+        dbg_err("Incorrect key"); 
+        return EINVAL;
+    }
+    
+    $query = "SELECT * FROM ". $table_name .  " WHERE `key` like \"" . $key .'"';
+    $result = db_query($query);
+    
+    if ($result == FALSE)  // если бд вернула 0 строк 
+        return ESQL;
+    else 
+        return $result[0];
+}   
 
 
 
@@ -52,17 +74,21 @@ function article_add_new($array_params)
     $data = array();
 
     /*  выбираем только нужные поля */
-    $fields = array('page_title', 'name', 'public', 'contents');
+    $fields = array('page_title', 'key', 'name', 'public', 'contents');
     foreach ($array_params as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;
             
                 
+    if(empty($data["key"])) { 
+        dbg_err("Not set key");    
+        return EINVAL;    
+    }
     if(empty($data["page_title"])) { 
         dbg_err("Not set page title");    
         return EINVAL;    
     }
-    
+    dump($data);
     if(empty($data["name"])) {
 	    dbg_err("Not set name");    
 	    return EINVAL;
@@ -101,7 +127,7 @@ function article_edit($id, $array_params)
     global $table_name;
 
     /*  выбираем только нужные поля */
-    $fields = array('page_title', 'name', 'public', 'contents');
+    $fields = array('page_title', 'key', 'name', 'public', 'contents');
     foreach ($array_params as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;
@@ -111,6 +137,10 @@ function article_edit($id, $array_params)
         return EINVAL;
     }
     
+    if(empty($data["key"])) { 
+        dbg_err("Not set key");    
+        return EINVAL;    
+    }
     if(empty($data["page_title"])) { 
         dbg_err("Not set page title");    
         return EINVAL;    
