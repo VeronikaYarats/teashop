@@ -7,6 +7,7 @@
                         <table border="1">
                             <tr>
                                 <th>Id</th>
+                                <th>Key</th>
                                 <th>Title page</th>
                                 <th>Name</th>
                                 <th>Contents</th>
@@ -15,6 +16,7 @@
                             <!-- START BLOCK : articles_row_table -->
                                 <tr>
                                     <td>{id}</td>
+                                    <td>{key}</td>
                                     <td>{page_title}</td>
                                     <td>{name}</td>
                                     <td>{contents}</td>
@@ -58,16 +60,19 @@
 	               {
 	                   var forma;
 	                   forma = document.getElementById("add_edit");
-	                   if (!forma.page_title.value)
-	                	    alert("Не введен title");
-	                   else 
-	                	    if (!forma.name.value)
-	                	    	   alert("Не введено название статьи");
+	                   if (!forma.key.value)
+                           alert("Не введен key");
+	                   else
+	                	    if (!forma.page_title.value)
+	                	    	  alert("Не введен title");
 	                	    else 
-	                	    	   if (!forma.contents.value)
-	                	    		    alert("Не введено содержание статьи");
-	                	    	   else
-	                	    		    forma.submit();
+	                	    	  if (!forma.name.value)
+	                	    		  alert("Не введено название статьи");
+	                	    	  else 
+	                	    		  if (!forma.contents.value)
+	                	    			  alert("Не введено содержание статьи");
+	                	    		  else
+	                	    			    forma.submit();
 	               }
 	           </script>
 	           <div style="border: solid 2px black; margin: 10px; width:700px">
@@ -87,6 +92,11 @@
 	                           <td align="right" valign="top">Публиковать</td>
 	                           <td><input type="checkbox" name="public" value="public" {public} > </td>
 	                       </tr>
+	                       <tr>
+                               <td align="right" valign="top">Key</td>
+                               <td><input type="text" name="key" size="20" value="{key}" ></td>
+                           </tr>
+	                       
 	                       <tr>
 	                           <td align="right" valign="top">Title</td>
 	                           <td><input type="text" name="page_title" size="20" value="{page_title}" ></td>
