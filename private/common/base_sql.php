@@ -1,45 +1,24 @@
 <?php
-
-/**
- * Открывает соединение с базой данных
- * @return 0 - в случае ошибки 
- */
-
-global $link;
-function db_init()
-{
-	global $link;
-	$host = '127.0.0.1	';
-	$user = 'admin';
-	$pass = '13941';
-	$database = 'veroshop';
-	$port = 3306;
-	return $link = mysqli_connect($host, $user, $pass, $database, $port);
-}
-db_init();
-
-
+/* Базовые функции для работы с бд */
 
 /**
  * Выполняет запрос
  *@param $query - запрос
- *@return 
  *@return 1 - если запрос успешно
- *@return 2 - если запрос не выполнен
- *@return data - возвращает ассоциативный массив как результат запроса
+ *        EBASE - если запрос не выполнен
+ *        data - возвращает ассоциативный массив как результат запроса
  */
 function db_query($query)
 {
-	$row = array();
 	global $link;
 	$data = array();
+	$row = array();
 	
 	$result = mysqli_query($link, $query);
 	if($result === TRUE)
 		return 1;
 	if($result === FALSE)
-		return 2;
-		
+		return EBASE;
 		
 	while($row = mysqli_fetch_assoc($result))
 		$data[] = $row;
@@ -51,7 +30,7 @@ function db_query($query)
  * Добавляет запись в БД
  * @param $table_name - имя таблицы для добавления
  * @param $array - массив данных для добавления
- * @return 0 -возвращает 0 в случае неудачи
+ * @return EBASE - в случае неудачи
  * @return $id - возвращает id вставленной записи
  */
 function db_insert($table_name, $array)
@@ -66,7 +45,6 @@ function db_insert($table_name, $array)
 		$query .= $separator . $field . ' = "' . $value . '"';
 		$separator = ',';
 	}
-	
 	$result = mysqli_query($link, $query);
 	if($result === FALSE)
 		return EBASE;
@@ -81,8 +59,8 @@ function db_insert($table_name, $array)
  * @param $table - имя таблицы для обновления
  * @param $id - id записи для обновления
  * @param $array - массив данных для обновления
- * @return 0 - в случае неудачи
- * @return 1 - в случае удачного обновления
+ * @return EBASE - в случае неудачи
+ *         0 - в случае удачного обновления
  */
 function db_update($table, $id, $array)
 {
@@ -94,18 +72,27 @@ function db_update($table, $id, $array)
 		$separator = ',';
 	}
 	$query .= " WHERE id = " . $id;
-	return mysqli_query($link, $query);
+	$update = mysqli_query($link, $query);
+	if($update)
+	   return 0;
+	else 
+	   return EBASE;
+	
 }
 
 
 /**
  * Закрывает ранее открытое соединение с базой данных
- * @return 0 - в случае ошибки
+ * @return EBASE - в случае ошибки
+ * @return 1 - в случае успеха
  */
 function db_close()
 {
 	global $link;
-	return mysqli_close($link);	
+	if(!mysqli_close($link))
+	   return EBASE;
+	else 
+	return 1;	
 }
 
 ?>

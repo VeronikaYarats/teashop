@@ -1,6 +1,6 @@
 <?php
 
-// функции для работы со статьями
+/* Функции для работа со статьями */
 
 require_once("common/base_sql.php"); //файл для работы с базой даных
 $table_name = "articles";
@@ -25,11 +25,9 @@ function article_get_by_id($id)
     $query = "SELECT * FROM ". $table_name .  " WHERE id = " . $id;
     $result = db_query($query);
     
-    if ($result == FALSE) { // если бд вернула 0 строк
-        dbg_err("Article not found"); 
+    if ($result == FALSE)  // если бд вернула 0 строк 
         return EINVAL;
-    }
-    return $result[0];
+    else return $result[0];
 }	
 
 
@@ -49,29 +47,37 @@ function article_get_by_id($id)
 function article_add_new($array_params)
 {
     global $table_name;
-    
-    if(!isset($array_params["page_title"])) { 
+    $data = array();
+
+    /*  выбираем только нужные поля */
+    $fields = array('page_title', 'name', 'public', 'contents');
+    foreach ($array_params as $key => $value)
+        if (in_array($key, $fields))
+            $data[$key] = $value;
+            
+                
+    if(empty($data["page_title"])) { 
         dbg_err("Not set page title");    
         return EINVAL;    
     }
     
-    if(!isset($array_params["name"])) {
+    if(empty($data["name"])) {
 	    dbg_err("Not set name");    
 	    return EINVAL;
     }
     
-    if(!isset($array_params["contents"])) {
+    if(empty($data["contents"])) {
 	    dbg_err("Not set contents");    
 	    return EINVAL;    
     }
     
-    if(!isset($array_params["public"])) {
+    if(!isset($data["public"])) {
         dbg_err("Not set public");    
         return EINVAL;    
     }
-    
-    return(db_insert($table_name, $array_params));
-}
+     dump($data);
+     return db_insert($table_name, $data); 
+    }
 
 
 
@@ -91,33 +97,34 @@ function article_add_new($array_params)
 function article_edit($id, $array_params)
 {
     global $table_name;
-    
+
+    /*  выбираем только нужные поля */
+    $fields = array('page_title', 'name', 'public', 'contents');
+    foreach ($array_params as $key => $value)
+        if (in_array($key, $fields))
+            $data[$key] = $value;
+            
     if (!is_numeric($id) || !isset($id)) {
         dbg_err("Incorrect id"); 
         return EINVAL;
     }
     
-    if(!isset($array_params["page_title"])) { 
+    if(empty($data["page_title"])) { 
         dbg_err("Not set page title");    
         return EINVAL;    
     }
     
-    if(!isset($array_params["page_title"])) { 
-        dbg_err("Not set page title");    
-        return EINVAL;    
-    }
-    
-    if(!isset($array_params["name"])) {
+    if(empty($data["name"])) {
         dbg_err("Not set name");    
         return EINVAL;
     }
     
-    if(!isset($array_params["contents"])) {
+    if(empty($data["contents"])) {
         dbg_err("Not set contents");    
         return EINVAL;    
     }
     
-    if(!isset($array_params["public"])) {
+   if(!isset($data["public"])) {
         dbg_err("Not set public");    
         return EINVAL;    
     }
@@ -127,11 +134,7 @@ function article_edit($id, $array_params)
         return EINVAL;
     }
     
-    if(!db_update($table_name, $id, $array_params)) {
-    	dbg_err("Can not edit article");
-    	return EBASE;
-    } else 
-        return 0;
+    return db_update($table_name, $id, $data);
 }
 
 
@@ -140,7 +143,7 @@ function article_edit($id, $array_params)
  * @param $id идентификатор записи которую нужно удалить
  * @return EINVAL в случае ошибки входных параметров
  * @return EBASE в случае ошибки связи с базой
- * @return 0 в случае успешного удаления записи
+ * @return 1 в случае успешного удаления записи
  */     
 
 function article_del($id)
@@ -157,10 +160,21 @@ function article_del($id)
     }
 
     $query = "DELETE FROM ". $table_name . " WHERE id = " . $id;
-    if(!db_query($query)){
-        dbg_err("Can not delete article");
-    return EBASE;
-    }
+    return db_query($query);
+}
+
+/**
+ * Получает все статьи бд
+ * @return EBASE - если запрос не выполнен
+ *         массив в случае успешного выполнения запроса
+ */
+
+function article_get_list()
+{
+	global $table_name;
+    
+	$query = "SELECT * FROM ". $table_name ;
+	return db_query($query);
 }
 
 ?>
