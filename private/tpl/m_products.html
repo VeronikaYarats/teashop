@@ -1,0 +1,26 @@
+/* шаблон оформляющий внешний вид продукта на сайте */
+<!-- START BLOCK : products -->
+<div>
+    <div align=left>
+        <div style="border: solid 1px black; margin: 10px; width: 300px; height: 200px">
+        </div>
+        <div style="position:absolute; left:500px; top:150px">
+            <h3>{name_product}</h3>
+            <ul>
+                <li> Производитель {country}</li>
+                <li> Вес {weight}</li>
+                <li> Цена {price}</li>
+        
+            </ul> 
+        </div>  
+</div>
+<!-- END BLOCK : products -->
+
+/* Сообщение если продукты не найдены */
+<!-- START BLOCK : product_error_message -->
+<div align="center">
+    <div style="border: solid 1px red; margin: 10px; width: 300px">
+        Извините, нет продуктов этой категории
+    </div>
+</div>
+<!-- END BLOCK : product_error_message -->
