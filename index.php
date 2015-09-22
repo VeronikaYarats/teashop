@@ -38,6 +38,10 @@ if (auth_get_admin())
         case 'adm_articles':
             $mod_content = m_adm_articles($_GET);
             break;
+        case 'adm_products':
+            $mod_content = m_adm_products($_GET);
+            break;
+            
         default:
         	$mod_content = m_articles();
         
@@ -55,7 +59,7 @@ switch ($mod) {
         $mod_content = m_articles($_GET);
         break;
     case 'products':
-      //  $mod_content = m_products($_GET);
+        $mod_content = m_products($_GET);
         break;
 }
 
