@@ -1,18 +1,28 @@
 /* шаблон оформляющий внешний вид продукта на сайте */
 <!-- START BLOCK : products -->
-<div>
-    <div align=left>
-        <div style="border: solid 1px black; margin: 10px; width: 300px; height: 200px">
-        </div>
-        <div style="position:absolute; left:500px; top:150px">
-            <h3>{name_product}</h3>
-            <ul>
-                <li> Производитель {country}</li>
-                <li> Вес {weight}</li>
-                <li> Цена {price}</li>
-        
-            </ul> 
-        </div>  
+<div style=" margin: 10px; width: 300px; height: 200px">
+    <div align="center">
+        <table>
+        <caption>{name_product}</caption>
+            <tr>
+                <td>
+                    <div style="border: solid 1px black; margin: 10px; width: 200px; height: 150px"></div>
+                </td>
+                <td>
+					<ul>
+					    <li> Производитель {country}</li>
+					    <li> Вес {weight}</li>
+					    <li> Цена {price}</li>
+					    
+					    <!-- START BLOCK : dymnamic_property -->
+						<li> {name} {value}</li>
+						<!-- END BLOCK : dymnamic_property -->
+						
+					</ul>
+                </td>
+            </tr>
+        </table>
+    </div>  
 </div>
 <!-- END BLOCK : products -->
 
