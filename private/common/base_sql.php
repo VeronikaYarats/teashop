@@ -18,8 +18,11 @@ function db_init($array=array())
                            $array['port']);
     if(!$link)
         return EBASE;
-    else 
+    else {
+    	mysqli_query($link, 'set character set utf8');
+    	mysqli_query($link, 'set names utf8');
         return 1;
+    }
 }
 
 /**
