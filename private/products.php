@@ -62,6 +62,8 @@ function product_get_dynamic_properties($product_id)
             
         /* тип данных STRING */
         case 'string':
+        /* тип данных INTEGER */
+        case 'integer':
         	/* получение значение свойства */
         	$query = "SELECT value FROM product_properties_values " .
                           "WHERE product_id = ". $product_id . " " .
@@ -72,18 +74,6 @@ function product_get_dynamic_properties($product_id)
             $value = $rows[0]['value'];
             $properties[$product_property['name']] = $value;
         	break;
-
-        /* тип данных INTEGER */
-        case 'integer':
-            $query = "SELECT value FROM product_properties_values " .
-                          "WHERE product_id = ". $product_id . " " .
-                          "AND property_id = " . $product_property['id'];
-            $rows = db_query($query);
-            if ($rows < 0)
-              return $rows;
-            $value = $rows[0]['value'];
-            $properties[$product_property['name']] = $value;
-            break;
         }
     }
     return $properties;
