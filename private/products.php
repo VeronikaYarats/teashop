@@ -2,50 +2,71 @@
 /* Функции для работа с продуктами */
 
 /**
- * Возаращает название, страну, вес, цену продукта по категории
- * @param $id - категории продукта
+ * Возаращает список продуктов
+ * @param $cat_id - id категории продукта
  */
 function products_get_list_by_category($cat_id)
 {
-	$query = "SELECT id, name_product, country, weight, price FROM products 
+    $cat_id = (int)$cat_id;
+    $query = "SELECT * FROM products 
              WHERE product_category_id = ". $cat_id;
     return db_query($query);
-	
 }
+
 /**
- * Получает названия и занчения динамических свойств продукта
- * @param $product_id - id продукта свойства
- * Возвращает массив['название свойства' => 'значение']
+ * Получает список динамических свойств продукта
+ * @param $product_id - id продукта
+ * @return массив в формате ('название свойства' => 'значение свойства')
+ *         или ошибка
  */
-function  product_get_dynamic_properties($product_id)
+function product_get_dynamic_properties($product_id)
 {
-	$query = "SELECT product_category_id FROM products WHERE id = " . $product_id;
-    $cat_id = db_query($query); //категория продукта для свойства
-    if ($cat_id < 0)
-        return ESQL;
+    $product_id = (int)$product_id;
+    $query = "SELECT product_category_id FROM products WHERE id = " . $product_id;
+    $rows = db_query($query); //категория продукта для свойства
+    if ($rows < 0)
+        return $rows;
          
-    $cat_id = $cat_id[0]['product_category_id'];
-	$query = "SELECT id, name, type FROM product_properties 
-	          WHERE product_category_id = " . $cat_id;
-	
-	$product_properties = db_query($query); //для каждого продукта получили список динамических свойств
-	if ($product_properties < 0)
-        return ESQL;
-	foreach($product_properties as $product_property) { 
-	   if($product_property['type'] = "enum") { //для каждого свойства продукта получили значение
-	       $query = "SELECT variant FROM product_property_enum WHERE property_id = " . 
-	                  $product_property['id'] . " and id = 
-	                  (SELECT value FROM product_properties_values WHERE product_id = ". 
-	                  $product_id . " and property_id = " . $product_property['id'] . ')';
-	                 
-           $value = db_query($query); // получили значение свойства
-           if ($value < 0)
-                return ESQL;
-           
-           $array[$product_property['name']] = $value[0]['variant'];
+    $cat_id = $rows[0]['product_category_id'];
+    
+    /* получение динамических свойств для продукта $product_id */
+    $query = "SELECT id, name, type FROM product_properties 
+              WHERE product_category_id = " . $cat_id;
+    $product_properties = db_query($query); 
+    if ($product_properties < 0)
+        return $product_properties;
+
+    $properties = array();
+    foreach($product_properties as $product_property) { 
+
+        /* анализ типа данных свойства */
+        switch ($product_property['type']) { 
+        /* тип данных ENUM */
+        case 'enum':
+            /* получение значение свойства */
+            $query = "SELECT variant FROM product_property_enum " .
+                     "WHERE property_id = " . $product_property['id'] . " " .
+                     "AND id = (" .
+                          "SELECT value FROM product_properties_values " .
+                          "WHERE product_id = ". $product_id . " " .
+                          "AND property_id = " . $product_property['id'] . 
+                               ')';
+
+            $rows = db_query($query);
+            if ($rows < 0)
+              return $rows;
+            $value = $rows[0]['variant'];
+
+            $properties[$product_property['name']] = $value;
+            break;
+
+        case 'string':
+        case 'int':
+            // $properties[$product_property['name']] = $value;
+            break;
         }
-	}
-	return $array;
+    }
+    return $properties;
 }
 
 
