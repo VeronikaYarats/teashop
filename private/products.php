@@ -1,6 +1,16 @@
 <?php
 /* Функции для работа с продуктами */
 
+
+/**
+ * Возвращает список категорий
+ */
+function product_categories_get_list()
+{
+	$query = "SELECT * FROM product_category";
+	return db_query($query);
+}
+
 /**
  * Возаращает список продуктов
  * @param $cat_id - id категории продукта
