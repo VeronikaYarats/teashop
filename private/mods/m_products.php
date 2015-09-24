@@ -18,9 +18,8 @@ function m_products($argv=array())
        if($properties < 0)
            continue;
        else 
-	       foreach ($properties as $property_name => $property_value)
-		       $tpl->assign('dymnamic_property', 
-		                    array('name' => $property_name, 'value' => $property_value));
+	       foreach ($properties as $property)
+		       $tpl->assign('dymnamic_property',$property);
 		       
     }   
     }
