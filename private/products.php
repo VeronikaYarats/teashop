@@ -1,6 +1,11 @@
 <?php
 /* Функции для работа с продуктами */
-
+function product_get_by_id($id)
+{
+	$query = "SELECT * FROM products WHERE id = " . $id;
+    return db_query($query);
+}
+	
 
 /**
  * Возвращает список категорий
@@ -67,7 +72,8 @@ function product_get_dynamic_properties($product_id)
               return $rows;
             $value = $rows[0]['variant'];
 
-            $properties[$product_property['name']] = $value;
+            $properties[$product_property['id']] = array("name" => $product_property['name'],
+                                                         "value" => $value);
             break;
             
         /* тип данных STRING */
@@ -82,7 +88,9 @@ function product_get_dynamic_properties($product_id)
         	if ($rows < 0)
               return $rows;
             $value = $rows[0]['value'];
-            $properties[$product_property['name']] = $value;
+        
+            $properties[$product_property['id']] = array("name" => $product_property['name'],
+                                                         "value" => $value);
         	break;
         }
     }
