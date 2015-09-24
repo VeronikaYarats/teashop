@@ -1,0 +1,61 @@
+/* Шаблон раздела редактирования продуктов в режиме администрирования */
+
+/* меню выбора категории */
+<!-- START BLOCK : category_menu --> 
+<form name="form1" method="POST" action="{http_root}exchange.php" id="get_category">
+<input type="hidden" name="post_query" value="get_category">
+<input type="hidden" name="id" value="{id}">
+<select name ="category_name">  
+    /* выпадающий список категорий */
+    <!-- START BLOCK : categories_list -->                       
+        <option name="id" value="{id}">{category_name} </option>
+    <!-- END BLOCK : categories_list -->
+</select> 
+<input type="submit" name="submit" value="Выбрать">
+</form>
+<!-- END BLOCK : category_menu -->
+
+/* название категории */ 
+<!-- START BLOCK : category_name -->
+    <h2>Категория: {category_name}</h2>
+<!-- END BLOCK : category_name -->
+
+/* отображение списка продуктов */
+<!-- START BLOCK : products_list -->
+<div align="center">
+    <div style="margin: 50px; width: 600px;">
+        <table border="1">
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Public</th>
+                <th>Цена</th>
+            </tr>
+            <!-- START BLOCK : products_row_table -->
+			<tr>
+			    <td>{id}</td>
+			    <td>{name}</td>
+			    <td>{public}</td>
+			    <th>{price}</th>
+			    <td>
+			        <a href="index.php?mod=adm_products&mode=edit_product&id={id}">
+			            <img src="{http_img}edit.jpg">
+			        </a>
+			    </td>
+			    <td>
+			        <a href="exchange.php?mod=adm_articles&get_query=del_product&product_id={id}"
+			        onClick="return window.confirm('Вы действительно хотите удалить продукт?')">
+			            <img src="{http_img}delete.jpg">
+			        </a>
+			    </td>
+			</tr>
+            <!-- END BLOCK : products_row_table -->
+        </table>
+		<br/>
+		<br/>
+		<a href="index.php?mod=adm_products&mode=add_product">Добавить продукт</a> 
+    </div>
+</div>
+<!-- END BLOCK : products_list -->
+
+
