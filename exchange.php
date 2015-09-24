@@ -80,6 +80,15 @@ if(isset($_POST['post_query']))
                 header( 'Location: index.php?mod=adm_login');
             }
             break;
+            
+        case "get_category":
+        	dump($_POST);
+        	if(!isset($_POST["category_name"]))
+        	   $cat_id = 1;
+        	else
+        	$cat_id = $_POST["category_name"];
+        	header('Location: index.php?mod=adm_products&mode=list_products&cat_id='.$cat_id);
+        	break;
    }
 
 /* Обработчик GET запросов */

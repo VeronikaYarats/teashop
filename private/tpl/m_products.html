@@ -1,6 +1,6 @@
 /* шаблон оформляющий внешний вид продукта на сайте */
 <!-- START BLOCK : products -->
-<div style=" margin: 10px; width: 300px; height: 200px">
+<div style=" margin: 10px; width: 500px; height: 200px">
     <div align="center">
         <table>
         <caption>{name_product}</caption>
@@ -10,12 +10,12 @@
                 </td>
                 <td>
 					<ul>
-					    <li> Производитель {country}</li>
-					    <li> Вес {weight}</li>
-					    <li> Цена {price}</li>
+					    <li> производитель: {country}</li>
+					    <li> вес: {weight}</li>
+					    <li> цена: {price}</li>
 					    
 					    <!-- START BLOCK : dymnamic_property -->
-						<li> {name} {value}</li>
+						<li> {name}: {value}</li>
 						<!-- END BLOCK : dymnamic_property -->
 						
 					</ul>
