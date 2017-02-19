@@ -191,7 +191,7 @@
      
         $reply = file_get_contents($image_url);
         if (!$reply)
-            return;
+            return 0;
         
         $upload_path = ABSOLUTE_ROOT_PATH . 'i/';
         $new_filename = generate_unique_file_name($upload_path, $image_url);
