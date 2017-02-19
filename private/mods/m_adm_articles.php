@@ -14,6 +14,7 @@ function m_adm_articles($argv = array())
 	switch ($mode) {
         /* вывод списка статей */
         case "list_articles":
+        	page_set_title("статьи");
             $tpl->assign("articles_list");
             $articles_list = article_get_list();
             foreach($articles_list as $article)
@@ -22,6 +23,7 @@ function m_adm_articles($argv = array())
 
         /* вывод формы редактирования статьи */
 		case "edit_article":
+			page_set_title("редактирование статьи");
 			$article_id = $argv['id'];
 			$article = article_get_by_id($article_id);
 			if($article['public'] == 1)
@@ -34,7 +36,8 @@ function m_adm_articles($argv = array())
 			break;
 
         /* вывод формы добавление статьи */
-		case "add_article": 
+		case "add_article":
+			page_set_title("добавление статьи"); 
 			$tpl->assign("article_add_edit");
 			$tpl->assign("article_add");
 			$tpl->assign("article_query_add");

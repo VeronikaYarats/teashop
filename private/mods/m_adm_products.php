@@ -12,6 +12,7 @@ function m_adm_products($argv = array())
         $mode = $argv['mode'];
     switch($mode) {
     	case "list_products":
+    		page_set_title("продукты");
     		if(!isset($argv['cat_id']))
     		  $cat_id = 1;
     		else 
@@ -44,6 +45,7 @@ function m_adm_products($argv = array())
     		break;
     	
     	case "edit_product":
+    		page_set_title("редактирование продукта");
     		$id = $argv['id'];
     		/* Вывод статических свойств */
     		$product = product_get_by_id($id);
@@ -73,6 +75,7 @@ function m_adm_products($argv = array())
     		break;
        
         case "add_product":
+        	page_set_title("добавление продукта");
         	$cat_id = $_GET['cat_id'];
         	$tpl->assign("product_add_edit",  array('cat_id' => $cat_id));
         	$tpl->assign("product_add");
