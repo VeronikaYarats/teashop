@@ -27,8 +27,9 @@ function m_products($argv=array())
 		$products_count++;   
 		$image_sizes = array('big' => array('w' => 0), 
 							'mini' => array('w' => 100));
-		$images = get_first_object_image('products', $product_id, $image_sizes);
-		$tpl->assign('image',$images);
+		$image = get_first_object_image('products', $product_id, $image_sizes);
+		if($image)
+			$tpl->assign('image',$image);
 	    
     }
     if($products_count < 1)
