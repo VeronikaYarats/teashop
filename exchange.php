@@ -88,6 +88,8 @@ if(isset($_POST['post_query']))
              /* Редактирование динамических свойств */
             $dinamic_properties = $_POST['dinamic_property'];
             foreach($dinamic_properties as $dinamic_property) {
+            	if($dinamic_property['value'] == 'none')
+            		 del_dinamic_prop($product_id);
                 $err = edit_dinamic_property($id, $dinamic_property);  
                 if ($err < 0) {
                     $block = "message_esql";
@@ -107,18 +109,21 @@ if(isset($_POST['post_query']))
          		$_POST['delete_image']) {
          		$err = del_image_from_object('products', $id, $_POST['img_id']);
          		if($err < 0)
-         			$block = "message_image_add_error";
-         			break;	
+         			$block = "message_image_add_error";	
          		}
    			/* Добавление изображения через поле File */	
- 			if(!$_FILES['image']['error']) { 
+ 			if(!$_FILES['image']['error']) 
  				$img_id = upload_image('image', '', $alt, $title);
-				$err = add_image_to_object('products', $id, $img_id);	
- 			}
+ 			
  			/* Добавление изображения через поле URL */
- 			if($image_url) {
+ 			if($image_url) 
  				$img_id = download_image($image_url, '', $alt, $title);
-         		add_image_to_object('products', $id, $img_id);	
+         
+ 			if(!is_NULL($img_id)) {
+ 				if($img_id > 0)
+					add_image_to_object('products', $id, $img_id);
+				else
+           	 		$block = "message_image_add_error";
  			}
  			
  			message_box_display($block, array('product_id' => $id));
@@ -138,9 +143,14 @@ if(isset($_POST['post_query']))
                 $block = "message_esql";
                 break;
          	}
+         	else
+         		 $block = "message_product_success_add";
+         
          	/* добавляем динамические свойства */
          	$dinamic_properties = $_POST['dinamic_property'];
          	foreach ($dinamic_properties as $dinamic_property) {
+         		if($dinamic_property['value'] = 'none')
+            		continue;
                 $err = product_add_dinamic_property($product_id, $dinamic_property['property_id'], 
          	                                 $dinamic_property['value']);
          	    if($err < 0) {
@@ -156,15 +166,18 @@ if(isset($_POST['post_query']))
          	$alt = $title;
 
             $image_url = $_POST['image_url'];
-           	if($image_url) {
-           	 	$img_id = download_image($image_url, '', $alt, $title);	
-           	 	add_image_to_object('products', $product_id, $img_id);	
-           	}
-           	if(!$_FILES['image']['error']) {
+           	if($image_url) 
+           	 	$img_id = download_image($image_url, '', $alt, $title);
+
+           	if(!$_FILES['image']['error']) 
             	$img_id = upload_image('image', '', $alt, $title);
-            	add_image_to_object('products', $product_id, $img_id);
-           	}
-            
+     
+    		if(!is_NULL($img_id)) {
+ 				if($img_id > 0)
+					add_image_to_object('products', $id, $img_id);
+				else
+           	 		$block = "message_image_add_error";
+ 			}
            	message_box_display($block, array('product_id' => $product_id));
          	header('Location: index.php?mod=adm_products&mode=list_products&cat_id='
          			. $_POST['product_category_id']);
@@ -176,7 +189,7 @@ if(isset($_POST['post_query']))
                ($_POST['password'] == "12345")) {
                	
          	    auth_store_admin(1);
-                header( 'Location: index.php');
+                header( 'Location: index.php?mod=adm_articles');
             }
             else {
                 message_box_display("message_adm_login_incorrect");
@@ -234,8 +247,9 @@ if(isset($_GET['get_query']))
                 continue;
             $product_id = $_GET['product_id'];
             $err = product_del($product_id);
-          	$image_err = del_images_object('products', $product_id);
-            if ($err && $image_err)
+            if(get_img_id_by_product_id($product_id))
+          		del_images_object('products', $product_id);
+            if ($err)
                 $block = "message_product_success_del";  
             else 
                 $block = "message_esql";
