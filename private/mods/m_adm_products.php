@@ -46,29 +46,37 @@ function m_adm_products($argv = array())
     	
     	case "edit_product":
     		page_set_title("редактирование продукта");
-    		$id = $argv['id'];
+    		$product_id = $argv['id'];
+    		$cat_id = $argv['cat_id'];
     		/* Вывод статических свойств */
-    		$product = product_get_by_id($id);
+    		$product = product_get_by_id($product_id);
     		if($product[0]['public'] == 1)
     			$product[0]['public'] = "checked";
     		$tpl->assign("product_add_edit", $product[0]);
-    		$tpl->assign("product_edit",array("id" => $id));
+    		$tpl->assign("product_edit",array("id" => $product_id));
     		$tpl->assign("product_query_edit");
     		/* Вывод динамических свойства */
-    		$dinamic_properties = product_get_dynamic_properties($id);
-    		foreach($dinamic_properties as $property) {
+   			$dinamic_properties = product_category_get_dynamic_properties($cat_id);
+    		foreach($dinamic_properties as $id => $property) {
+    			$property['id'] = $id;
+    			/* Вывод динамических свойств */
     		  	$tpl->assign("dinamic_property", $property);
-    		  	$variants = product_get_variants_by_property($property['id']);
-    		  	foreach ($variants as $variant) {
-    		      if ($property['value'] == $variant['variant'])
-    		          $variant['selected'] = "selected";
-    		      $tpl->assign("variants_value_property_list", $variant);
-    		  }
+    		  	/* Если тип значения свойства enum */
+    		  	if($property['type'] == 'enum') {
+    		  		/* Получаем варианты перечесления */
+    		  		$variants = product_get_variants_by_property($id);
+    		  		foreach ($variants as $variant) {
+    		  			$value = get_dinamic_value($product_id, $property['id']);
+    		     		if ($variant['id'] == $value[0]['value'])
+    		          		$variant['selected'] = "selected";
+    		      		$tpl->assign("variants_value_property_list", $variant);
+    		  		}
+    		  	}
     		}
     		/* Вывод изображения */
     		$image_sizes = array('big' => array('w' => 0), 
 							'mini' => array('w' => 150));
-    		$image = get_first_object_image('products', $id, $image_sizes, $order = 'ASC');
+    		$image = get_first_object_image('products', $product_id, $image_sizes, $order = 'ASC');
     		if($image)
     			$tpl->assign("image_prev", $image);
     		return $tpl->result();
