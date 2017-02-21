@@ -1,36 +1,39 @@
 /* шаблон оформляющий внешний вид продукта на сайте */
-<!-- START BLOCK : products -->
-<div style=" margin: 10px; width: 500px; height: 200px">
-    <div align="center">
-        <table>
-        <caption>{name}</caption>
-            <tr>
-                <td>
-                    <div style="border: solid 1px black; margin: 10px; width: 200px; height: 150px"></div>
-                </td>
-                <td>
+<section class="prod_list">
+	<!-- START BLOCK : products -->
+		<article class="prod_list_item">
+			<div class="table">
+				<div class="table_cell"> 
+			
+			<!-- START BLOCK : image -->
+					<img class="image" src="{url_mini}" alt="{alt}" title="{title}" >
+ 			<!-- END BLOCK : image -->
+	
+				</div>
+				<div class="table_cell">
 					<ul>
+						<li class="prod_name inline uppercase">{trade_mark} </li>
+						<li class="prod_name inline">{name} </li>
 					    <li> производитель: {country}</li>
-					    <li> вес: {weight}</li>
-					    <li> цена: {price}</li>
 					    
-					    <!-- START BLOCK : dymnamic_property -->
+					<!-- START BLOCK : dymnamic_property -->
 						<li> {name}: {value}</li>
-						<!-- END BLOCK : dymnamic_property -->
-						
+					<!-- END BLOCK : dymnamic_property -->
+					
+						 <li> вес: {weight} гр</li>
+						 <li> цена: {price} руб</li> 
 					</ul>
-                </td>
-            </tr>
-        </table>
-    </div>  
-</div>
-<!-- END BLOCK : products -->
+				</div>
+			</div> 
+			
+		</article>
+
+	<!-- END BLOCK : products -->
+</section>
 
 /* Сообщение если продукты не найдены */
 <!-- START BLOCK : product_error_message -->
-<div align="center">
-    <div style="border: solid 1px red; margin: 10px; width: 300px">
-        Извините, нет продуктов этой категории
-    </div>
-</div>
+ <div class="error_message center">
+        <p>Извините, отсутствуют продукты этой категории</p>
+ </div>
 <!-- END BLOCK : product_error_message -->

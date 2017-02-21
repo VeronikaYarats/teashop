@@ -1,40 +1,70 @@
 /*  Cкелет страницы сайта */
+<!DOCTYPE html>
 <html>
     <head>
         <meta content="text/html; charset=utf-8" http-equiv="content-type">
         <link rel="stylesheet" type="text/css" href="{http_css}common.css">
+        <script src="{http_js}common.js"></script>
         <title>{title}</title>
     </head>
     <body>
-    
-        <div id="container">
-            <div id="header">
-                <ul class="nav">
-                    <li><a href="index.php"> Главная </a> </li>
-                    
-                     <li><a href="index.php?mod=products&cat_id=1"> Чай </a> </li>
-                     <li><a href="index.php?mod=products&cat_id=2"> Кофе </a> </li>
-                     <li><a href="index.php?mod=articles&key=about_us">О нас</a> </li>
-                     <li><a href="index.php?mod=articles&id=79&key=welcome">Контакты</a> </li>
-                </ul>   
-                    /* блок меню администратора */
-                    <!-- START BLOCK : admin_menu --> 
-                        <ul class="nav">
-                            <li><a href="index.php?mod=adm_articles"> Статьи </a> </li>
-                            <li><a href="index.php?mod=products">Продукты</a> </li>
-                            <li><a href="exchange.php?get_query=adm_logout"> Выход </a> </li>
-                        </ul>   
-                    <!-- END BLOCK : admin_menu -->                           
-            </div>
-            <div align="center">
-                /* Подключения всех всплывающих окошек */
-                <!-- START INSERT : message_boxes.html --> <!-- END INSERT : message_boxes.html -->
+		<img id="top_left_leaves" src="{http_img}top_left_leaves.png">
+	    <img id="top_right_leaves" src="{http_img}top_right_leaves.png">
+	    <header>
+			<div class="table">
+		    	<div class="table_cell t_center">
+		   			<img src="{http_img}teapot_2.png">
+		   		</div>
+		   		<div class="table_cell" id="header_slogan" >
+		   			<h1>Интернет-каталог чая и кофе</h1>
+		   			<p>Всегда в продаже элитные сорта зеленого и черного чая, пуэр, 
+		   				кофе арабика, кофе рабуста</p>
+		   		</div>
+		   		<div class="table_cell valign_top t_center" >
+		   			<img src="{http_img}windchime_5.png">
+		   		</div>
+		   		<div class="table_cell t_center">
+		   			<img src="{http_img}cup_of_tea_2.png">
+		   		</div>
+	   		</div> <!-- end .table -->
+	   	
+	    	<div class="table">
+				<div class="table_cell flowers right">
+					<img src="{http_img}left_flower_3.png">
+				</div>
+				<div class="table_cell nav_cell">
+					<nav>
+						<a href="index.php?mod=articles&key=welcome">Главная</a>          
+				        <a href="index.php?mod=products&cat_id=1"> Чай </a>
+				        <a href="index.php?mod=products&cat_id=2"> Кофе </a>
+				 		<a href="index.php?mod=articles&id=79&key=welcome">Контакты</a>
 
-                /* Вывод страницы осуществляется в эту метку */
-                <div align="center">
-                {mod_content}
-                </div>
-            </div>
-        </div>
+				    /* блок меню администратора */  
+				    <!-- START BLOCK : admin_menu --> 
+				        <a href="index.php?mod=adm_articles"> Статьи </a>
+		       			<a href="index.php?mod=adm_products">Продукты</a>
+		        		<a href="exchange.php?get_query=adm_logout"> Выход </a>
+		        	<!-- END BLOCK : admin_menu --> 
+		        	
+			        </nav> 
+				</div>
+				<div class="table_cell flowers left">
+					<img src="{http_img}right_flower_2.png">
+				</div>
+			</div> <!-- end table -->
+		</header> 
+	        
+	    <div class="content">
+	            
+	    /* Подключения всех всплывающих окошек */
+	    <!-- START INSERT : message_boxes.html --> <!-- END INSERT : message_boxes.html -->
+		
+		/* Вывод страницы осуществляется в эту метку */
+	    	{mod_content}
+	    </div>
+	         
+	    <footer>
+	    <p>Дипломный проект Вероники Курочкиной</p>
+	    </footer>
     </body>
 </html>

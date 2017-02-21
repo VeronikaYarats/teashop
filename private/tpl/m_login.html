@@ -1,27 +1,20 @@
 /* Шаблон авторизации администратора */
+
 <!-- START BLOCK : adm_login -->
-        <div align="center">
-             <h3>Войти</h3>
-                <div style="border: solid 2px black; margin: 10px; width: 300px">
-                    <form name="form4" method="POST" action="exchange.php">
-                    <input type="hidden" name="post_query" value="adm_login">
-                    
-                        <table border="0" cellspacing="5" cellpadding="5">
-                            <tr>
-                                <td align="right" valign="top">Логин</td>
-                                <td> <input type="text" name="name" size="20"></td>
-                            </tr>
-                            <tr>
-                                <td align="right" valign="top">Пароль</td>
-                                <td> <input type="password" name="password" size="20"></td>
-                            </tr>
-                            <tr>
-                                <td align="center" colspan="2">
-                                    <input type="submit" name="submit" value="Войти">
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-               </div>
-        </div>
+<section>        
+    <form class="form" name="form4" method="POST" action="exchange.php">
+    	<input type="hidden" name="post_query" value="adm_login">
+        <div class="table">
+        	<div class="table_row">
+            	<p>Логин</p>
+                <p><input type="text" name="name" size="20"></p>
+            </div>
+            <div class="table_row">  
+            	<p>Пароль</p>
+                <p><input type="password" name="password" size="20"></p>
+            </div> 
+     	</div>
+        <input class="submit_button" type="submit" name="submit" value="Войти">
+  	</form>
+</section>       
 <!-- END BLOCK : adm_login -->

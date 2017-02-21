@@ -1,44 +1,53 @@
 /* Шаблон раздела редактирования продуктов в режиме администрирования */
+<section>
 
 /* меню выбора категории */
 <!-- START BLOCK : category_menu --> 
-<form name="form1" method="POST" action="{http_root}exchange.php" id="get_category">
-<input type="hidden" name="post_query" value="get_category">
-<input type="hidden" name="id" value="{id}">
-<select name ="category_name">  
-    /* выпадающий список категорий */
-    <!-- START BLOCK : categories_list -->                       
-        <option name="id" value="{id}">{category_name} </option>
-    <!-- END BLOCK : categories_list -->
-</select> 
-<input type="submit" name="submit" value="Выбрать">
-</form>
+	<form name="cat_form" method="POST" action="{http_root}exchange.php" id="get_category">
+		<input type="hidden" name="post_query" value="get_category">
+		<input type="hidden" name="id" value="{id}">
+		<select name ="category_name" 
+		onChange = "self.location = document.cat_form.category_name[document.cat_form.category_name.selectedIndex].value;" >  
+    
+    	/* выпадающий список категорий */
+    	<!-- START BLOCK : categories_list -->                       
+        	<option value="index.php?mod=adm_products&mode=list_products&cat_id={id}" {selected}>
+        		{category_name} 
+        	</option>
+    	<!-- END BLOCK : categories_list -->
+    	
+		</select> 
+	</form>
 <!-- END BLOCK : category_menu -->
+
 
 /* название категории */ 
 <!-- START BLOCK : category_name -->
-    <h2>Категория: {category_name}</h2>
+    <h1>Категория: {category_name}</h1>
 <!-- END BLOCK : category_name -->
 
 /* отображение списка продуктов */
 <!-- START BLOCK : products_list -->
-<div align="center">
-    <div style="margin: 50px; width: 600px;">
-        <table border="1">
-            <tr>
+	<div>
+       	<table>
+           	<tr>
                 <th>Id</th>
+                <th>Торговая марка</th>
                 <th>Название</th>
                 <th>Public</th>
                 <th>Цена</th>
+                <th colspan="2"></th>
             </tr>
+            
             <!-- START BLOCK : products_row_table -->
 			<tr>
 			    <td>{id}</td>
+			    <td>{trade_mark}</td>
 			    <td>{name}</td>
 			    <td>{public}</td>
-			    <th>{price}</th>
+			    <td>{price}</td>
 			    <td>
-			        <a href="index.php?mod=adm_products&mode=edit_product&id={id}">
+			        <a href="index.php?mod=adm_products&mode=edit_product&id={id}&cat_id={product_category_id}">
 			            <img src="{http_img}edit.jpg">
 			        </a>
 			    </td>
@@ -50,12 +59,118 @@
 			    </td>
 			</tr>
             <!-- END BLOCK : products_row_table -->
+        
         </table>
-		<br/>
-		<br/>
-		<a href="index.php?mod=adm_products&mode=add_product">Добавить продукт</a> 
+	<a class="submit_button" href="index.php?mod=adm_products&mode=add_product&cat_id={cat_id}">Добавить продукт</a> 
     </div>
-</div>
 <!-- END BLOCK : products_list -->
+
+</section>
+
+
+/* редактировние и добавление продукта */
+
+<!-- START BLOCK : product_add_edit -->
+<section>
+	<div class="center">
+
+	<!-- START BLOCK : product_edit -->
+		<header>Редактирование продукта id: {id}</header>
+	<!-- END BLOCK : product_edit -->
+
+	<!-- START BLOCK : product_add -->
+		<header>Добавление продукта</header>
+	<!-- END BLOCK : product_add -->
+   
+        <form enctype="multipart/form-data" class="form" name="form1" method="POST" action="{http_root}exchange.php" id="add_edit">
+        
+        <!-- START BLOCK : product_query_edit -->
+            <input type="hidden" name="post_query" value="edit_product">
+        <!-- END BLOCK : product_query_edit -->
+                       
+        <!-- START BLOCK : product_query_add -->
+        <input type="hidden" name="post_query" value="add_product">
+        <!-- END BLOCK : product_query_add -->
+     
+            <input type="hidden" name=product_id value="{id}">
+            <input type="hidden" name=cat_id value="{product_category_id}">
+            <input type="hidden" name=product_category_id value="{cat_id}">
+           		<div class="table_row">
+					<p>Публиковать</p>
+	                <p><input type="checkbox" name="public" value="public" {public} > </p>
+				</div>
+	      		<div class="table_row">
+	                <p>Торговая марка</p>
+	                <p><input type="text" name="trade_mark" value="{trade_mark}"> </p>
+	            </div>
+	            <div class="table_row">
+	                <p>Название</p>
+	                <p> <input type="text" name="name" size="20" value="{name}" ></p>
+	            </div>
+	            <div class="table_row">
+	                <p>Cтрана</p>
+	                <p><input type="text" name="country" value="{country}"  > </p>
+	            </div>
+	            <div class="table_row">
+	                <p>Вес</p>
+	                <p><input type="text" name="weight" value="{weight}"> </p>
+	            </div>
+	            <div class="table_row">
+	                <p>Цена</p>
+	                <p><input type="text" name="price" value="{price}"  > </p>
+	            </div>
+	            
+	            <!-- START BLOCK : dinamic_property -->
+	            <div class="table_row">
+	            	<p>{name}</p>
+	                	<input type="hidden" name="dinamic_property[{name}]" value="{name}">
+	                	<input type="hidden" name="dinamic_property[{name}][property_id]" value="{id}">
+	                
+                	<p><select name ="dinamic_property[{name}][value]">  
+                            
+                    /* выпадающий список вариантов значение */
+                    	 <option name="value_id" value="none" {selected}></option>
+                	<!-- START BLOCK : variants_value_property_list --> 
+                   		<option name="value_id" value="{id}" {selected}>{variant}</option>
+                	<!-- END BLOCK : variants_value_property_list -->
+          
+                		</select> 
+                	</p>
+                </div>
+	            <!-- END BLOCK : dinamic_property -->
+	            
+				<!-- START BLOCK : image_prev -->
+	            <div class="table_row">
+	           		<p>
+	           			<input type="hidden" name="img_id" value="{img_id}">
+	           			<img class="image" src = '{url_mini}'>
+	           		</p>
+	           		<p>
+	           			<input type="checkbox" name="delete_image" value="delete_image" >
+	           			Удалить изображение 
+	           		</p>
+	           	</div>
+	           	<!-- END BLOCK : image_prev -->
+	           	
+	            <div class="table_row">
+	            	<input type="hidden" name="MAX_FILE_SIZE" value="3000000" >
+                	<p>Загрузка фотографии</p>
+                	<p><input type="file" name="image"></p>
+                </div>
+                <div class="table_row">
+                	<p>URL</p>
+                	<p><input type="url" name="image_url"  value=""></p>
+                </div>
+      			<div class="table_row">
+	           		<p></p>
+	                <p> 
+	                 	<a class="submit_button" href="javascript:;" onclick="check_product_fields()">Cохранить</a>
+	               	</p>
+               	</div>
+	 	</form>
+	    <input class="button_back" onclick="window.history.back();" type="button" value="Вернуться"/>
+ 	</div>
+</section>    
+<!-- END BLOCK : product_add_edit -->
 
 
