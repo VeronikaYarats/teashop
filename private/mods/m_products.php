@@ -8,8 +8,8 @@ function m_products($argv=array())
     $tpl->assign(product_search);
     if(isset($argv['cat_id']))
        $cat_id = $argv['cat_id'];
-    $cat_name = category_name_get_by_cat_id($cat_id);
-    page_set_title($cat_name);
+    $category = get_category_by_cat_id($cat_id);
+    page_set_title($category['page_title']);
     $products = products_get_list_by_category($cat_id);
     foreach($products as $product) {
        if (!$product['public'])
@@ -18,12 +18,11 @@ function m_products($argv=array())
        $tpl->assign("products", $product);
        $product_id = $product['id'];
        $properties = product_get_dynamic_properties($product_id);
-       
        if($properties < 0)
            continue;
-       else 
-	       foreach ($properties as $property)
-		       $tpl->assign('dymnamic_property',$property);
+        
+   		foreach($properties as $property)
+			$tpl->assign('dymnamic_property',$property);
 		$products_count++;   
 		$image_sizes = array('big' => array('w' => 0), 
 							'mini' => array('w' => 100));
