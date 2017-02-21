@@ -309,3 +309,7 @@ select {
 	border-radius: 3px;
 }
 
+textarea {
+	height:150px;
+	width:500px;
+}
