@@ -1,22 +1,22 @@
 <?php
 // Мод обслуживающий редактирование продуктов
 
-function m_adm_products($argv = array())
+function m_adm_products($arg_list)
 {
 	global $global_marks;
     $tpl = new strontium_tpl("private/tpl/m_adm_products.html",
                              $global_marks, false); 
                              
     $mode = 'list_products';
-    if(isset($argv['mode']))
-        $mode = $argv['mode'];
+    if(isset($arg_list['mode']))
+        $mode = $arg_list['mode'];
     switch($mode) {
     	case "list_products":
     		page_set_title("продукты");
-    		if(!isset($argv['cat_id']))
+    		if(!isset($arg_list['cat_id']))
     		  $cat_id = 1;
     		else 
-    		$cat_id = $argv["cat_id"];
+    		$cat_id = $arg_list["cat_id"];
     		
     		if($cat_id)
     		/* вывод меню выбора категории */
@@ -46,8 +46,8 @@ function m_adm_products($argv = array())
     	
     	case "edit_product":
     		page_set_title("редактирование продукта");
-    		$product_id = $argv['id'];
-    		$cat_id = $argv['cat_id'];
+    		$product_id = $arg_list['id'];
+    		$cat_id = $arg_list['cat_id'];
     		/* Вывод статических свойств */
     		$product = product_get_by_id($product_id);
     		if($product[0]['public'] == 1)
@@ -84,7 +84,7 @@ function m_adm_products($argv = array())
        
         case "add_product":
         	page_set_title("добавление продукта");
-        	$cat_id = $_GET['cat_id'];
+        	$cat_id = $arg_list['cat_id'];
         	$tpl->assign("product_add_edit",  array('cat_id' => $cat_id));
         	$tpl->assign("product_add");
         	$tpl->assign("product_query_add");

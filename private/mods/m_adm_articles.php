@@ -1,15 +1,15 @@
 <?php
 /* код обслуживающий режим администрирования статей */
 
-function m_adm_articles($argv = array())
+function m_adm_articles($arg_list)
 {
 	global $global_marks;
 	$tpl = new strontium_tpl("private/tpl/m_adm_articles.html",
                              $global_marks, false); 
 
     $mode = 'list_articles';
-	if(isset($argv['mode']))
-        $mode = $argv['mode'];
+	if(isset($arg_list['mode']))
+        $mode = $arg_list['mode'];
 
 	switch ($mode) {
         /* вывод списка статей */
@@ -24,7 +24,7 @@ function m_adm_articles($argv = array())
         /* вывод формы редактирования статьи */
 		case "edit_article":
 			page_set_title("редактирование статьи");
-			$article_id = $argv['id'];
+			$article_id = $arg_list['id'];
 			$article = article_get_by_id($article_id);
 			if($article['public'] == 1)
                 $article['public'] = "checked";

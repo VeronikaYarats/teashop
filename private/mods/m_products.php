@@ -1,13 +1,13 @@
 <?php 
 /*  код обслуживающий продукты */
 
-function m_products($argv=array())
+function m_products($arg_list)
 {
 	$products_count = 0;
     $tpl = new strontium_tpl("private/tpl/m_products.html", $global_marks, false);
     $tpl->assign(product_search);
-    if(isset($argv['cat_id']))
-       $cat_id = $argv['cat_id'];
+    if(isset($arg_list['cat_id']))
+       $cat_id = $arg_list['cat_id'];
     $category = get_category_by_cat_id($cat_id);
     page_set_title($category['page_title']);
     $products = products_get_list_by_category($cat_id);
@@ -27,14 +27,15 @@ function m_products($argv=array())
 		$image_sizes = array('big' => array('w' => 0), 
 							'mini' => array('w' => 100));
 		$image = get_first_object_image('products', $product_id, $image_sizes);
-		if($image)
-			$tpl->assign('image',$image);
+		if($image) {
+			$image['product_id'] = $product_id;
+			$tpl->assign('image',$image);	
+		}
 	    
     }
     if($products_count < 1)
     	$tpl->assign("product_error_message"); 	
-    return $tpl->result();
-    
+    return $tpl->result();   
 }
 
 ?>
