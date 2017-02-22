@@ -168,11 +168,11 @@ function product_get_dynamic_properties ($product_id)
  * @return ESQL - в случае неудачи
  *         0 - в случае удачного обновления
  */
-function products_edit($product_id, $argv=array())
+function products_edit($product_id, $arg_list)
 {
 	global $products;
 	$fields = array('id', 'name', 'country', 'weight', 'price', 'public', 'trade_mark', 'description');
-	foreach ($argv as $key => $value)
+	foreach ($arg_list as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;
    return db_update($products, $product_id, $data);
@@ -186,13 +186,13 @@ function products_edit($product_id, $argv=array())
  * @return ESQL - в случае неудачи
  *         0 - в случае удачного обновления
  */
-function edit_dinamic_property($product_id, $argv=array())
+function edit_dinamic_property($product_id, $arg_list)
 {
 	global $product_properties_values;
 	global $link;
 	
-	$property_id = $argv['property_id'];
-	$value = $argv['value'];
+	$property_id = $arg_list['property_id'];
+	$value = $arg_list['value'];
 	
 	$query = "DELETE FROM " . $product_properties_values .  " " .
               "WHERE product_id = " . $product_id . " AND property_id = " . $property_id;
@@ -209,11 +209,11 @@ function edit_dinamic_property($product_id, $argv=array())
  * @return id - продукта
  *         ESQL - в случае неудачи
  */
-function product_add_static_properties($argv=array())
+function product_add_static_properties($arg_list)
 {
     global $products;
     $fields = array('name', 'country', 'weight', 'price', 'public', 'product_category_id', 'trade_mark', 'description');
-    foreach ($argv as $key => $value)
+    foreach ($arg_list as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;        
     return db_insert($products, $data);
