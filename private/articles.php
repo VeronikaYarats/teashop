@@ -208,5 +208,3 @@ function article_get_list()
 	$query = "SELECT * FROM ". $table_name ;
 	return db_query($query);
 }
-
-?>

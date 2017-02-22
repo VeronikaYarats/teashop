@@ -20,5 +20,3 @@ function m_product($arg_list)
     	$tpl->assign("image", $image);
 	return $tpl->result();
 }
-
-?>

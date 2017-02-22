@@ -9,7 +9,7 @@
 function auth_store_admin($adm_id)
 {
     global $_SESSION;
-    $_SESSION['auth_adm_id'] = $adm_id;
+	$_SESSION['auth_adm_id'] = $adm_id;
 }
 
 
@@ -31,4 +31,3 @@ function auth_adm_remove()
 {
     unset($_SESSION['auth_adm_id']);
 }
-?>

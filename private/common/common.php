@@ -19,6 +19,3 @@ function page_get_title()
     global $page_title;
     return $page_title;
 }
-
-
-?>

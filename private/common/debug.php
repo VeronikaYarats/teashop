@@ -41,5 +41,3 @@ function dbg_notice($data)
     dump("NOTICE:\n");
     dump($data);
 }
-
-?>

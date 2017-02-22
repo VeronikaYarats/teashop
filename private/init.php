@@ -28,5 +28,3 @@ $global_marks = array('http_root' => HTTP_ROOT_PATH,
                       'http_css' => HTTP_ROOT_PATH . 'css/',
                       'http_img' => HTTP_ROOT_PATH . 'i/',
                       'http_js' => HTTP_ROOT_PATH . 'js/');
-
-?>

@@ -627,6 +627,3 @@
         
         return generate_image($path . $imagename, $path . $imagename, $dw, $dh, 'resize', $filetype, $string, $jpeg_quality);
     }
-
-    
-?>

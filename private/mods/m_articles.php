@@ -20,5 +20,3 @@ function m_articles($arg_list)
     page_set_title($article['page_title']);
     return $tpl->result();
 }
-
-?>

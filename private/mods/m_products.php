@@ -37,5 +37,3 @@ function m_products($arg_list)
     	$tpl->assign("product_error_message"); 	
     return $tpl->result();   
 }
-
-?>

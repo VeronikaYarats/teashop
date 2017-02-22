@@ -958,5 +958,3 @@
         $tpl->assign(0, $data);
         return $tpl->make_result();
     }
-
-?>

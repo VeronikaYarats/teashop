@@ -70,7 +70,7 @@ switch ($mod) {
 
 /* Если введен некорректный mode то вывод статьи по умолчанию */
 if (!$mod_content)
-	$mod_content = m_articles();
+	$mod_content = m_articles($_GET);
 
 /* Заполнение главного шаблона */
 $tpl = new strontium_tpl("private/tpl/skeleton.html", $global_marks, false);
@@ -88,5 +88,3 @@ if(auth_get_admin())
     $tpl->assign("admin_menu");   
 
 echo $tpl->result();
- 
-?>

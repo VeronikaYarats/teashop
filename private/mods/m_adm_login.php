@@ -9,5 +9,3 @@ function m_adm_login()
     $tpl->assign("adm_login");
     return $tpl->result();
 }
-
-?>

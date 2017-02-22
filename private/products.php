@@ -267,4 +267,3 @@ function del_dinamic_prop($product_id)
               "WHERE product_id = " . $product_id;
 	return db_query($query);
 }
-?>

@@ -261,4 +261,3 @@ if(isset($_GET['get_query']))
             header('Location: index.php?mod=adm_products');
             break;
     }
-?>

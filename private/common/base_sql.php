@@ -118,5 +118,3 @@ function db_close()
     else 
         return 1;   
 }
-
-?>

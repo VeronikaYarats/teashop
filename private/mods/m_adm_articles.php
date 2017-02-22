@@ -46,4 +46,3 @@ function m_adm_articles($arg_list)
 	}
     return $tpl->result();
 }
-?>

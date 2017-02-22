@@ -26,4 +26,3 @@ function message_box_check_for_display()
     unset($_SESSION['display_window']);
     return array('block' => $block, 'data' => $data);
 }
-?>

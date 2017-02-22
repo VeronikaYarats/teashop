@@ -103,6 +103,3 @@ function m_adm_products($arg_list)
         	
     }
 }
-
-
-?>
