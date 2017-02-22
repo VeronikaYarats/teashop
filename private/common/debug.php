@@ -34,7 +34,7 @@ function dbg_warn($data)
 
 /**
  * Вывод сообщения уведомления
- * 
+ *
  */
 function dbg_notice($data)
 {

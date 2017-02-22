@@ -8,7 +8,7 @@ define("ENOTUNIQUE", -4); // Ошибка добавления в базу, ес
 define('HTTP_ROOT_PATH', '/veroshop/'); // Внутренний путь к файлам
 define('ABSOLUTE_ROOT_PATH', '/var/www/veroshop/'); // Абсолютный пусть к файлас
 
-/*  Глобальный массив параметров для соединения с бд */
+ /*  Глобальный массив параметров для соединения с бд */
 $db_connection_settings = array("host" => '127.0.0.1  ',
                                 "user" => 'root',
                                 "pass" => 'nuclear',

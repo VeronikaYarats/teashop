@@ -5,22 +5,22 @@ $link = NULL; // Дескриптор соединения с сервером M
 
 /**
  * Открывает соединение с базой данных
- * @return EBASE - в случае ошибки 
+ * @return EBASE - в случае ошибки
  *         1 - вслучае успеха
  */
 function db_init($array=array())
 {
     global $link;
-    $link = mysqli_connect($array['host'], 
-                           $array['user'], 
-                           $array['pass'], 
-                           $array['database'], 
-                           $array['port']);
+    $link = mysqli_connect($array['host'],
+                            $array['user'],
+                            $array['pass'],
+                            $array['database'],
+                            $array['port']);
     if(!$link)
         return EBASE;
     else {
-    	mysqli_query($link, 'set character set utf8');
-    	mysqli_query($link, 'set names utf8');
+        mysqli_query($link, 'set character set utf8');
+        mysqli_query($link, 'set names utf8');
         return 1;
     }
 }
@@ -37,29 +37,28 @@ function db_query($query)
     global $link;
     $data = array();
     $row = array();
-    
+
     $result = mysqli_query($link, $query);
     if($result === TRUE)
         return 1;
     if($result === FALSE)
         return ESQL;
-        
+
     while($row = mysqli_fetch_assoc($result))
         $data[] = $row;
     return $data;
 }
 
 
-/** 
+/**
  * Добавляет запись в БД
  * @param $table_name - имя таблицы для добавления
  * @param $array - массив данных для добавления
- * @return ESQL - в случае неудачи
+ * @return ESQL - в случае неудач
  * @return $id - возвращает id вставленной записи
  */
 function db_insert($table_name, $array)
 {
-    
     global $link;
     $query = "INSERT INTO " . $table_name . " SET ";
     $separator = '';
@@ -83,14 +82,14 @@ function db_insert($table_name, $array)
  * @param $table - имя таблицы для обновления
  * @param $id - id записи для обновления
  * @param $array - массив данных для обновления
- * @return ESQL - в случае неудачи
+ * @return ESQL - в случае неудач
  *         0 - в случае удачного обновления
  */
 function db_update($table, $id, $array)
 {
     global $link;
     $separator = '';
-    $query = "UPDATE " . $table . " SET "; 
+    $query = "UPDATE " . $table . " SET ";
     foreach($array as $field     => $value) {
         $query .= $separator . '`' .  $field . '` = "' . $value . '"';
         $separator = ',';
@@ -98,10 +97,10 @@ function db_update($table, $id, $array)
     $query .= " WHERE id = " . $id;
     $update = mysqli_query($link, $query);
     if($update)
-       return 0;
-    else 
-       return ESQL;
-    
+        return 0;
+    else
+        return ESQL;
+
 }
 
 
@@ -114,7 +113,7 @@ function db_close()
 {
     global $link;
     if(!mysqli_close($link))
-       return EBASE;
-    else 
-        return 1;   
+        return EBASE;
+    else
+        return 1;
 }
