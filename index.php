@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 /* общие библиотеки */
 require_once "private/common/debug.php";
@@ -17,14 +17,16 @@ require_once "private/mods/m_adm_products.php";
 require_once "private/mods/m_adm_articles.php";
 require_once "private/mods/m_articles.php";
 require_once "private/mods/m_products.php";
+require_once "private/mods/m_product.php";
 require_once "private/mods/m_adm_login.php";
+require_once "private/common/images.php";
 
 /* начальная инициализация системы */
 require_once "private/init.php";
-
+require_once "private/users.php";
 session_start();
- 
-
+//$user = get_user_by_login_pass('veronika', '12345');
+//dump(get_user_by_id($user[0]['id']));
 /* Выбор режима работы */
 $mod = "articles";
 if(isset($_GET['mod']))
@@ -43,7 +45,7 @@ if (auth_get_admin())
             break;
             
         default:
-        	$mod_content = m_articles();
+        	$mod_content = m_articles($_GET);
         
     }
 
@@ -61,6 +63,9 @@ switch ($mod) {
     case 'products':
         $mod_content = m_products($_GET);
         break;
+    case 'product':
+        $mod_content = m_product($_GET);
+        break;
 }
 
 /* Если введен некорректный mode то вывод статьи по умолчанию */
@@ -77,11 +82,11 @@ $tpl->assign(NULL, array('title' => page_get_title(),
 $win = message_box_check_for_display();
 if($win)
    $tpl->assign($win['block'], $win['data']);
-   
+
 /* Вывод меню администратора если автозирован */   
 if(auth_get_admin())
     $tpl->assign("admin_menu");   
 
 echo $tpl->result();
-
+ 
 ?>
