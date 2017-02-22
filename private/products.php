@@ -171,7 +171,7 @@ function product_get_dynamic_properties ($product_id)
 function products_edit($product_id, $argv=array())
 {
 	global $products;
-	$fields = array('id', 'name', 'country', 'weight', 'price', 'public', 'trade_mark');
+	$fields = array('id', 'name', 'country', 'weight', 'price', 'public', 'trade_mark', 'description');
 	foreach ($argv as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;
@@ -212,7 +212,7 @@ function edit_dinamic_property($product_id, $argv=array())
 function product_add_static_properties($argv=array())
 {
     global $products;
-    $fields = array('name', 'country', 'weight', 'price', 'public', 'product_category_id', 'trade_mark');
+    $fields = array('name', 'country', 'weight', 'price', 'public', 'product_category_id', 'trade_mark', 'description');
     foreach ($argv as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;        
