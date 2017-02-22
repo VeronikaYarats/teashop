@@ -141,7 +141,7 @@ function product_get_dynamic_properties ($product_id)
                 $variant = db_query($query);
                 $property_value = $variant[0]['variant'];//название вариант
                 $properties[$property_id] = array("name" => $property_name,
-                                 			  	  "value" => $property_value);	
+                                                  "value" => $property_value);	
                 break;
                 /* тип данных STRING */	
             case 'string':
@@ -216,7 +216,8 @@ function edit_dinamic_property($product_id, $arg_list)
 function product_add_static_properties($arg_list)
 {
     global $products;
-    $fields = array('name', 'country', 'weight', 'price', 'public', 'product_category_id', 'trade_mark', 'description');
+    $fields = array('name', 'country', 'weight', 'price', 'public', 
+                    'product_category_id', 'trade_mark', 'description');
         foreach ($arg_list as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;

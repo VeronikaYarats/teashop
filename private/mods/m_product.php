@@ -13,7 +13,7 @@ function m_product($arg_list)
    	    $tpl->assign("dinamic_property", $dinamic_property);
    	 
    	$image_sizes = array('big' => array('w' => 0),
-						 'mini' => array('w' => 300));
+   	                    'mini' => array('w' => 300));
     $image = get_first_object_image('products', $product_id,
     $image_sizes, $order = 'ASC');
    	if($image)

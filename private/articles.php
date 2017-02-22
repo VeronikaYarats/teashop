@@ -104,7 +104,7 @@ function article_add_new($array_params)
      }
      else
         return db_insert($table_name, $data);
-     }
+}
 
 
 
