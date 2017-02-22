@@ -8,6 +8,7 @@ require_once "private/common/images.php";
 require_once "private/articles.php";
 require_once "private/products.php";
 require_once "private/init.php";
+require_once "private/users.php";
 
 session_start();
 
@@ -19,7 +20,7 @@ if(isset($_POST['post_query']))
         case "article_edit":
             $id = $_POST['article_id'];
             if(!auth_get_admin())
-                continue;
+            	continue;
             $public = isset($_POST['public']);
 
             $array = $_POST;
@@ -40,7 +41,7 @@ if(isset($_POST['post_query']))
             		break;
             }
             message_box_display($block, $data);
-            header('Location: index.php?mod=adm_articles');
+           	header('Location: index.php?mod=adm_articles');
             break;
             
         /* Добавление новой статьи */
@@ -72,11 +73,11 @@ if(isset($_POST['post_query']))
         /* Редактирование продукта */
         case "edit_product":
         	if(!auth_get_admin())
-                continue;
+            	continue;
         	$id = $_POST['product_id'];
         	$cat_id = $_POST['cat_id'];
             if(!auth_get_admin())
-                continue;
+            	continue;
             $public = isset($_POST['public']);
             $array = $_POST;
             $array["public"] = $public;
@@ -89,7 +90,7 @@ if(isset($_POST['post_query']))
             $dinamic_properties = $_POST['dinamic_property'];
             foreach($dinamic_properties as $dinamic_property) {
             	if($dinamic_property['value'] == 'none')
-            		 del_dinamic_prop($product_id);
+            		del_dinamic_prop($product_id);
                 $err = edit_dinamic_property($id, $dinamic_property);  
                 if ($err < 0) {
                     $block = "message_esql";
@@ -148,9 +149,11 @@ if(isset($_POST['post_query']))
          
          	/* добавляем динамические свойства */
          	$dinamic_properties = $_POST['dinamic_property'];
+         	
          	foreach ($dinamic_properties as $dinamic_property) {
-         		if($dinamic_property['value'] = 'none')
+         		if($dinamic_property['value'] == 'none')
             		continue;
+            			
                 $err = product_add_dinamic_property($product_id, $dinamic_property['property_id'], 
          	                                 $dinamic_property['value']);
          	    if($err < 0) {
@@ -178,6 +181,7 @@ if(isset($_POST['post_query']))
 				else
            	 		$block = "message_image_add_error";
  			}
+ 		
            	message_box_display($block, array('product_id' => $product_id));
          	header('Location: index.php?mod=adm_products&mode=list_products&cat_id='
          			. $_POST['product_category_id']);
@@ -187,8 +191,7 @@ if(isset($_POST['post_query']))
         case "adm_login":
         	if(($_POST['name'] == "veronika") && 
                ($_POST['password'] == "12345")) {
-               	
-         	    auth_store_admin(1);
+               	auth_store_admin(1);
                 header( 'Location: index.php?mod=adm_articles');
             }
             else {
@@ -200,9 +203,10 @@ if(isset($_POST['post_query']))
             /* Выбор списка продуктов по категории */
         case "get_category":
         	if(!isset($_POST["category_name"]))
-        	   $cat_id = 1;
+        		$cat_id = 1;
         	else
-        	$cat_id = $_POST["category_name"];
+        		$cat_id = $_POST["category_name"];
+        		
         	header('Location: index.php?mod=adm_products&mode=list_products&cat_id='.$cat_id);
         	break;
    }

@@ -51,8 +51,8 @@ function article_get_by_key($key)
     
     if ($result == FALSE)  // если бд вернула 0 строк 
         return ESQL;
-    else 
-        return $result[0];
+    else
+    	return $result[0];
 }   
 
 

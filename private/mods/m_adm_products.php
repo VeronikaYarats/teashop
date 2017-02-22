@@ -14,9 +14,9 @@ function m_adm_products($arg_list)
     	case "list_products":
     		page_set_title("продукты");
     		if(!isset($arg_list['cat_id']))
-    		  $cat_id = 1;
+    			$cat_id = 1;
     		else 
-    		$cat_id = $arg_list["cat_id"];
+    			$cat_id = $arg_list["cat_id"];
     		
     		if($cat_id)
     		/* вывод меню выбора категории */
@@ -40,7 +40,7 @@ function m_adm_products($arg_list)
             $tpl->assign("products_list", array('cat_id' => $cat_id));
             $products = products_get_list_by_category($cat_id);
             foreach($products as $product)
-              $tpl->assign("products_row_table", $product);
+              	$tpl->assign("products_row_table", $product);
             return $tpl->result();
     		break;
     	
@@ -76,7 +76,8 @@ function m_adm_products($arg_list)
     		/* Вывод изображения */
     		$image_sizes = array('big' => array('w' => 0), 
 							'mini' => array('w' => 150));
-    		$image = get_first_object_image('products', $product_id, $image_sizes, $order = 'ASC');
+    		$image = get_first_object_image('products', $product_id, 
+    										$image_sizes, $order = 'ASC');
     		if($image)
     			$tpl->assign("image_prev", $image);
     		return $tpl->result();

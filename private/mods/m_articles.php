@@ -12,7 +12,7 @@ function m_articles($arg_list)
             $article = article_get_by_key($arg_list['key']);
         else 
             $article = article_get_by_key("welcome");
-            
+          
     if( $article < 0 || $article['public'] == 0)
             $tpl->assign("article_error_message");
     else 

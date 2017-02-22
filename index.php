@@ -70,7 +70,7 @@ switch ($mod) {
 
 /* Если введен некорректный mode то вывод статьи по умолчанию */
 if (!$mod_content)
-      $mod_content = m_articles();
+	$mod_content = m_articles();
 
 /* Заполнение главного шаблона */
 $tpl = new strontium_tpl("private/tpl/skeleton.html", $global_marks, false);
@@ -81,7 +81,7 @@ $tpl->assign(NULL, array('title' => page_get_title(),
 /* Вывод всплывающего сообщения, если нужно */
 $win = message_box_check_for_display();
 if($win)
-   $tpl->assign($win['block'], $win['data']);
+	$tpl->assign($win['block'], $win['data']);
 
 /* Вывод меню администратора если автозирован */   
 if(auth_get_admin())

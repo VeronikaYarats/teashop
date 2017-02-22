@@ -7,19 +7,19 @@ function m_products($arg_list)
     $tpl = new strontium_tpl("private/tpl/m_products.html", $global_marks, false);
     $tpl->assign(product_search);
     if(isset($arg_list['cat_id']))
-       $cat_id = $arg_list['cat_id'];
+    	$cat_id = $arg_list['cat_id'];
     $category = get_category_by_cat_id($cat_id);
     page_set_title($category['page_title']);
     $products = products_get_list_by_category($cat_id);
     foreach($products as $product) {
-       if (!$product['public'])
-          continue;  
+    	if (!$product['public'])
+    		continue;  
 		
-       $tpl->assign("products", $product);
-       $product_id = $product['id'];
-       $properties = product_get_dynamic_properties($product_id);
-       if($properties < 0)
-           continue;
+    	$tpl->assign("products", $product);
+       	$product_id = $product['id'];
+       	$properties = product_get_dynamic_properties($product_id);
+       	if($properties < 0)
+       		continue;
         
    		foreach($properties as $property)
 			$tpl->assign('dymnamic_property',$property);
