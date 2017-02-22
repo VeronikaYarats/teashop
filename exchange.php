@@ -18,14 +18,13 @@ if(isset($_POST['post_query']))
 
    	/* Редактирование статьи */
     case "article_edit":
-        $id = $_POST['article_id'];
         if(!auth_get_admin())
             continue;
+        $data = $_POST;
+        $id = $_POST['article_id'];
         $public = isset($_POST['public']);
-
-        $array = $_POST;
-        $array["public"] = $public;
-        $err = article_edit($id, $array);
+        $data["public"] = $public;
+        $err = article_edit($id, $data);
         switch ($err) {
         case 0:
             $block = "message_article_success_edit";
@@ -79,10 +78,10 @@ if(isset($_POST['post_query']))
         if(!auth_get_admin())
             continue;
         $public = isset($_POST['public']);
-        $array = $_POST;
-        $array["public"] = $public;
+        $data = $_POST;
+        $data["public"] = $public;
         /* Редактирование статический свойств */
-        $err = products_edit($id, $array);
+        $err = products_edit($id, $data);
         if ($err < 0)
             $block = "message_esql";
 
@@ -189,9 +188,12 @@ if(isset($_POST['post_query']))
 
         /* Авторизация администратора сайта */
     case "adm_login":
-        if(($_POST['name'] == "veronika") &&
-        ($_POST['password'] == "12345")) {
-            auth_store_admin(1);
+         
+        $login =  addslashes($_POST['name']);
+        $pass = addslashes($_POST['password']);
+        $user = user_get_by_pass($login, $pass);  
+        if($user) {
+            auth_store_admin($user[0]['id']);
             header( 'Location: index.php?mod=adm_articles');
         }
         else {
@@ -199,7 +201,7 @@ if(isset($_POST['post_query']))
             header( 'Location: index.php?mod=adm_login');
         }
         break;
-
+        
         /* Выбор списка продуктов по категории */
     case "get_category":
         if(!isset($_POST["category_name"]))
