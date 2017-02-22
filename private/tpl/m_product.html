@@ -1,0 +1,27 @@
+/* шаблон оформляющий внешний вид информации о продукте */
+<!-- START BLOCK: product_description -->
+<article class="product">
+	<h1>{trade_mark} {name}</h1>
+	<div class="table">
+		<div class="table_cell">
+			<!-- START BLOCK : image -->
+				<img src="{url_mini}" alt="{alt}" title="{title}" >
+	 		<!-- END BLOCK : image -->
+		</div>
+		<div class="table_cell">
+			<ul class="product_properties">
+				<li> производитель: {country}</li>
+				
+				<!-- START BLOCK : dinamic_property -->
+					<li> {name}: {value}</li>
+				<!-- END BLOCK : dinamic_property -->
+				
+				<li> вес: {weight} гр</li>
+				<li> цена: {price} руб</li> 
+			</ul>
+			<p>{description}</p>
+		</div>	
+	</div> 	
+	<input class="button_back" onclick="window.history.back();" type="button" value="Назад"/>
+</article>
+<!-- END BLOCK: product_description -->
