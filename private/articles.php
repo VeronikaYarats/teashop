@@ -2,11 +2,6 @@
 
 /* Функции для работа со статьями */
 
-require_once("common/base_sql.php"); //файл для работы с базой даны
-$table_name = "articles";
-
-
-
 /**
  * Получить ассоциативный массив с данными записи с идентификатором $id
  * @param $id идентификатор записи
@@ -16,13 +11,11 @@ $table_name = "articles";
  */
 function article_get_by_id($id)
 {
-    global $table_name;
-
     if (!is_numeric($id) || !isset($id))
         return EINVAL;
 
-    $query = "SELECT * FROM ". $table_name .  " WHERE id = " . $id;
-    $result = db_query($query);
+    $query = "SELECT * FROM articles WHERE id = " . $id;
+    $result = db()->query($query);
 
     if ($result == FALSE)  // если бд вернула 0 строк 
         return ESQL;
@@ -39,15 +32,13 @@ function article_get_by_id($id)
  */
 function article_get_by_key($key)
 {
-    global $table_name;
-
     if (!isset($key)) {
         dbg_err("Incorrect key");
         return EINVAL;
     }
 
-    $query = "SELECT * FROM ". $table_name .  " WHERE `key` like \"" . $key .'"';
-    $result = db_query($query);
+    $query = "SELECT * FROM articles WHERE `key` like \"" . $key .'"';
+    $result = db()->query($query);
 
     if ($result == FALSE)  // если бд вернула 0 строк 
         return ESQL;
@@ -70,7 +61,6 @@ function article_get_by_key($key)
  */
 function article_add_new($array_params)
 {
-    global $table_name;
     $data = array();
 
     /*  выбираем только нужные поля */
@@ -92,18 +82,12 @@ function article_add_new($array_params)
         dbg_err("Not set name");
         return EINVAL;
      }
-
      if(empty($data["contents"])) {
         dbg_err("Not set contents");
         return EINVAL;
      }
-
-     if(!isset($data["public"])) {
-        dbg_err("Not set public");
-        return EINVAL;
-     }
      else
-        return db_insert($table_name, $data);
+        return db()->insert("articles", $data);
 }
 
 
@@ -123,8 +107,6 @@ function article_add_new($array_params)
  */
 function article_edit($id, $array_params)
 {
-    global $table_name;
-
     /*  выбираем только нужные поля */
      $fields = array('page_title', 'key', 'name', 'public', 'contents');
      foreach ($array_params as $key => $value)
@@ -155,17 +137,12 @@ function article_edit($id, $array_params)
         return EINVAL;
      }
 
-     if(!isset($data["public"])) {
-        dbg_err("Not set public");
-        return EINVAL;
-     }
-
      if (article_get_by_id($id) <= 0) {
         dbg_err("Article not found");
         return EINVAL;
      }
 
-     return db_update($table_name, $id, $data);
+     return db()->update("articles", $id, $data);
 }
 
 
@@ -179,8 +156,6 @@ function article_edit($id, $array_params)
 
 function article_del($id)
 {
-    global $table_name;
-
     if (!is_numeric($id) || !isset($id)) {
         dbg_err("Incorrect id");
         return EINVAL;
@@ -190,8 +165,8 @@ function article_del($id)
         exit;
     }
 
-    $query = "DELETE FROM ". $table_name . " WHERE id = " . $id;
-    return db_query($query);
+    $query = "DELETE FROM articles WHERE id = " . $id;
+    return db()->query($query);
 }
 
 /**
@@ -202,8 +177,6 @@ function article_del($id)
 
 function article_get_list()
 {
-    global $table_name;
-
-    $query = "SELECT * FROM ". $table_name ;
-    return db_query($query);
+    $query = "SELECT * FROM articles";
+    return db()->query($query);
 }

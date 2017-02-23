@@ -5,7 +5,7 @@ function m_products($arg_list)
 {
     $products_count = 0;
     $tpl = new strontium_tpl("private/tpl/m_products.html", 
-                            $global_marks, false);
+                            array(), false);
     $tpl->assign(product_search);
     if(isset($arg_list['cat_id']))
         $cat_id = $arg_list['cat_id'];

@@ -126,7 +126,7 @@ function upload_image($field_name, $name = '', $alt = '', $title = '')
     $list_of_inserted_images = array();
     foreach ($upload_image_list as $image) {
         $tmp_filename = $image['tmp_name'];
-        $upload_path = ABSOLUTE_ROOT_PATH . 'i/';
+        $upload_path = global_conf()['absolute_root_path'] . 'i/';
          
         $new_filename = generate_unique_file_name($upload_path, $image['name']);
         if (!$new_filename) {
@@ -153,7 +153,7 @@ function upload_image($field_name, $name = '', $alt = '', $title = '')
          
         list($img_width, $img_height) = getimagesize($upload_path . $new_filename);
          
-        $img_id = db_insert('images', array('name' => $name,
+        $img_id = db()->insert('images', array('name' => $name,
 	                                         'alt' => $alt,
 	                                         'title' => $title,
 	                                         'enable' => '1',
@@ -187,7 +187,7 @@ function download_image($image_url, $name = '', $alt = '', $title = '')
     if (!$reply)
         return 0;
 
-    $upload_path = ABSOLUTE_ROOT_PATH . 'i/';
+    $upload_path = global_conf()['absolute_root_path'] . 'i/';
     $new_filename = generate_unique_file_name($upload_path, $image_url);
     if (!$new_filename) {
         dump("ERROR FILE!: ");
@@ -206,7 +206,7 @@ function download_image($image_url, $name = '', $alt = '', $title = '')
 
     list($img_width, $img_height) = getimagesize($upload_path . $new_filename);
 
-    $img_id = db_insert('images', array('name' => $name,
+    $img_id = db()->insert('images', array('name' => $name,
                                          'alt' => $alt,
                                          'title' => $title,
                                          'enable' => '1',
@@ -285,7 +285,7 @@ function get_resize_mode($need_width, $need_height, $curr_width, $curr_height)
 function get_image($id, $width = 0, $height = 0)
 {
 
-    $item = db_query('SELECT * FROM images WHERE id = ' . $id);
+    $item = db()->query('SELECT * FROM images WHERE id = ' . $id);
     $image = $item[0];
     if (!$image)
         return false;
@@ -293,8 +293,8 @@ function get_image($id, $width = 0, $height = 0)
     $files = array();
     foreach ($f as $file)
         $files[] = trim($file);
-    $image['full_filename'] = ABSOLUTE_ROOT_PATH . 'i/' . $files[0];
-    $image['url'] = HTTP_ROOT_PATH . 'i/' . $files[0];
+    $image['full_filename'] = global_conf()['absolute_root_path'] . 'i/' . $files[0];
+    $image['url'] = global_conf()['http_root_path'] . 'i/' . $files[0];
     $imag['filename'] = $files[0];
     $image['files'] = $files;
     $resize_mode = get_resize_mode($width, $height, $image['width'], $image['height']);
@@ -315,21 +315,21 @@ function get_image($id, $width = 0, $height = 0)
         break;
     }
 
-    if (!file_exists(ABSOLUTE_ROOT_PATH . '/i/' . $thumbnail_filename)) {
-        copy($image['full_filename'], ABSOLUTE_ROOT_PATH . '/i/' . $thumbnail_filename);
-        chmod(ABSOLUTE_ROOT_PATH . 'i/' . $thumbnail_filename, 0666);
+    if (!file_exists(global_conf()['absolute_root_path'] . '/i/' . $thumbnail_filename)) {
+        copy($image['full_filename'], global_conf()['absolute_root_path'] . '/i/' . $thumbnail_filename);
+        chmod(global_conf()['absolute_root_path'] . 'i/' . $thumbnail_filename, 0666);
         if ($resize_mode == 'width')
-            resize_img($thumbnail_filename, ABSOLUTE_ROOT_PATH . 'i/', $width, 0);
+            resize_img($thumbnail_filename, global_conf()['absolute_root_path'] . 'i/', $width, 0);
 
         else
-            resize_img($thumbnail_filename, ABSOLUTE_ROOT_PATH . 'i/', 0, $height);
+            resize_img($thumbnail_filename, global_conf()['absolute_root_path'] . 'i/', 0, $height);
 
         $image['files'][] = $thumbnail_filename;
-        db_update('images', $id, array('files' => array_to_string($image['files'])));
+        db()->update('images', $id, array('files' => array_to_string($image['files'])));
     }
 
-    $image['url'] = HTTP_ROOT_PATH . 'i/' . $thumbnail_filename;
-    $image['full_filename'] = ABSOLUTE_ROOT_PATH . 'i/' . $thumbnail_filename;
+    $image['url'] = global_conf()['http_root_path'] . 'i/' . $thumbnail_filename;
+    $image['full_filename'] = global_conf()['absolute_root_path'] . 'i/' . $thumbnail_filename;
     $image['filename'] = $thumbnail_filename;
 
     return $image;
@@ -347,9 +347,9 @@ function delete_image($img_id)
     $img = get_image($img_id);
     if ($img['files'])
         foreach ($img['files'] as $file)
-            @unlink(ABSOLUTE_ROOT_PATH . 'i/' . $file);
+            @unlink(global_conf()['absolute_root_path'] . 'i/' . $file);
      
-    return (db_query('DELETE FROM images WHERE id = ' . $img_id));
+    return (db()->query('DELETE FROM images WHERE id = ' . $img_id));
 }
 
 
@@ -369,7 +369,7 @@ function add_image_to_object($obj_type, $obj_id, $img_id)
 
      $last_order = $row['order'] ? $row['order'] : 0;*/
 
-    $r= db_insert('object_images', array(
+    $r= db()->insert('object_images', array(
                                        'obj_type' => strtok($obj_type, " "),
                                        'obj_id' => (int)$obj_id,
                                        'img_id' => (int)$img_id));
@@ -383,7 +383,7 @@ function add_image_to_object($obj_type, $obj_id, $img_id)
  */
 function del_image_from_object($obj_type, $obj_id, $img_id)
 {
-    db_query('DELETE FROM object_images WHERE obj_type = "' . strtok($obj_type, " ") .
+    db()->query('DELETE FROM object_images WHERE obj_type = "' . strtok($obj_type, " ") .
                  '" AND obj_id = ' . (int)$obj_id . ' AND img_id = ' . (int)$img_id);
 
     delete_image($img_id);
@@ -404,7 +404,7 @@ function del_images_object($obj_type, $obj_id)
     foreach ($rows as $row)
         delete_image($row['img_id']);
 
-    db_query('DELETE FROM object_images WHERE obj_type = "' . strtok($obj_type, " ") .
+    db()->query('DELETE FROM object_images WHERE obj_type = "' . strtok($obj_type, " ") .
                  '" AND obj_id = ' . (int)$obj_id);
 
     return true;
@@ -498,7 +498,7 @@ function get_first_object_image($obj_type, $obj_id, $image_sizes = array())
 {
     $query = 'SELECT * FROM object_images WHERE obj_type = "' . strtok($obj_type, " ") .
                                     '" AND obj_id = ' . (int)$obj_id;
-    $row = db_query( $query);
+    $row = db()->query( $query);
     if (!$row)
         return;
      

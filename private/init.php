@@ -5,26 +5,30 @@ define("EINVAL", -1); // Ошибка во входных аргументах
 define("EBASE", -2); // Ошибка связи с базой
 define("ESQL", -3); // Не корректный SQL запрос
 define("ENOTUNIQUE", -4); // Ошибка добавления в базу, если такая запись уже существует
-define('HTTP_ROOT_PATH', '/veroshop/'); // Внутренний путь к файлам
-define('ABSOLUTE_ROOT_PATH', '/var/www/veroshop/'); // Абсолютный пусть к файлас
 
- /*  Глобальный массив параметров для соединения с бд */
-$db_connection_settings = array("host" => '127.0.0.1  ',
-                                "user" => 'root',
-                                "pass" => 'nuclear',
-                                "database" => 'veroshop');
-
+/*
+ * Возвращает глобальные настройки системы
+ */
+function global_conf()
+{
+    $http_root_path = "/veroshop/"; // Внутренний путь к файлам
+    $absolute_root_path = "/var/www/veroshop/"; // Абсолютный пусть к файлам
+    
+    return array('database' => array("host" => '127.0.0.1  ',
+                                    "user" => 'root',
+                                    "pass" => 'nuclear63',
+                                    "database" => 'veroshop'),
+                'global_marks' => array('http_root' => $http_root_path,
+                                        'http_css' => $http_root_path . 'css/',
+                                        'http_img' => $http_root_path . 'i/',
+                                        'http_js' => $http_root_path . 'js/'),
+                'http_root_path' => $http_root_path,
+                'absolute_root_path' => $absolute_root_path);
+}
 
 /* Открывает соединение с базой данных */
-$err = db_init($db_connection_settings);
+$err = db()->connect(global_conf()['database']);
 if ($err < 0) {
     dbg_err("Database connection fault");
     exit;
 }
-
-
-/* Глобальные метки для путей к файлам */
-$global_marks = array('http_root' => HTTP_ROOT_PATH,
-                      'http_css' => HTTP_ROOT_PATH . 'css/',
-                      'http_img' => HTTP_ROOT_PATH . 'i/',
-                      'http_js' => HTTP_ROOT_PATH . 'js/');

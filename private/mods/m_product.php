@@ -3,9 +3,12 @@
 function m_product($arg_list)
 {
     $tpl = new strontium_tpl("private/tpl/m_product.html",
-                             $global_marks, false);
+                             array(), false);
+ 
     $product_id = $arg_list['id'];
     $product = product_get_by_id($product_id);
+    $title = $product[0]['trade_mark'] . ' ' . $product[0]['name'];
+    page_set_title($title);
     $tpl->assign("product_description", $product[0]);
 
     $dinamic_properties = product_get_dynamic_properties ($product_id);

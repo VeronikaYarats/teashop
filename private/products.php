@@ -1,10 +1,6 @@
 <?php
 /* Функции для работа с продуктами */
 
-$products = "products";
-$product_properties_values = 'product_properties_values';
-
-
 /**
  * возвращает значения таблицы products
  * @param $id - id продукта
@@ -14,7 +10,7 @@ $product_properties_values = 'product_properties_values';
 function product_get_by_id($id)
 {
     $query = "SELECT * FROM products WHERE id = " . $id;
-    return db_query($query);
+    return db()->query($query);
 }
 
 /**
@@ -25,7 +21,7 @@ function get_img_id_by_product_id($id)
 {
     $query = "SELECT img_id FROM object_images WHERE obj_id = " . $id . 
              " AND obj_type LIKE 'products'";
-    return db_query($query);
+    return db()->query($query);
 }
 
 /**
@@ -35,7 +31,7 @@ function get_img_id_by_product_id($id)
 function get_category_by_cat_id($cat_id)
 {
     $query = "SELECT * FROM product_category WHERE id = " . $cat_id;
-    $result = db_query($query);
+    $result = db()->query($query);
     return $result[0];
 }
 
@@ -46,7 +42,7 @@ function get_category_by_cat_id($cat_id)
 function product_categories_get_list()
 {
     $query = "SELECT * FROM product_category";
-    return db_query($query);
+    return db()->query($query);
 }
 
 
@@ -61,7 +57,7 @@ function products_get_list_by_category($cat_id)
     $cat_id = (int)$cat_id;
     $query = "SELECT * FROM products
              WHERE product_category_id = ". $cat_id;
-    return db_query($query);
+    return db()->query($query);
 }
 
 
@@ -75,7 +71,7 @@ function product_category_get_dynamic_properties($cat_id)
     $cat_id = (int)$cat_id;
     $query = "SELECT id, name, type FROM product_properties
               WHERE product_category_id = " . $cat_id;
-    $category_properties = db_query($query);
+    $category_properties = db()->query($query);
     foreach($category_properties as $category_property)
         $properties[$category_property['id']] = array('name' => $category_property['name'],
                                                       'type' => $category_property['type']);
@@ -92,7 +88,7 @@ function product_category_get_dynamic_properties($cat_id)
 function product_get_variants_by_property($property_id)
 {
     $query = "SELECT * FROM product_property_enum WHERE property_id = " .$property_id;
-    return db_query($query);
+    return db()->query($query);
 }
 
 
@@ -106,7 +102,7 @@ function get_dinamic_value($product_id, $property_id)
     $query = "SELECT value FROM product_properties_values " .
                           		"WHERE product_id = ". $product_id . " " .
                           		"AND property_id = " . $property_id;
-    return db_query($query);
+    return db()->query($query);
 }
 
 
@@ -121,14 +117,14 @@ function product_get_dynamic_properties ($product_id)
 {
     $query = "SELECT * FROM product_properties_values
 			 WHERE product_id = " . $product_id;
-    $product_properties_values = db_query($query);
+    $product_properties_values = db()->query($query);
     if ($product_properties_values < 0 || !$product_properties_values)
         return $product_properties_values;
 
     foreach($product_properties_values as $product_properties_value) {
         $property_id = $product_properties_value['property_id'];
         $query ="SELECT * FROM product_properties WHERE id = " . $property_id;
-        $product_properties = db_query($query);
+        $product_properties = db()->query($query);
         foreach($product_properties as $product_property) {
             $property_name = $product_property['name']; //название свойств
             	
@@ -138,7 +134,7 @@ function product_get_dynamic_properties ($product_id)
             case 'enum':
                 $query = "SELECT * FROM product_property_enum WHERE id = " 
                          . $product_properties_value['value'];
-                $variant = db_query($query);
+                $variant = db()->query($query);
                 $property_value = $variant[0]['variant'];//название вариант
                 $properties[$property_id] = array("name" => $property_name,
                                                   "value" => $property_value);	
@@ -172,14 +168,13 @@ function product_get_dynamic_properties ($product_id)
  */
 function products_edit($product_id, $arg_list)
 {
-    global $products;
     $fields = array('id', 'name', 'country', 'weight', 'price', 
                     'public', 'trade_mark', 'description');
     foreach ($arg_list as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;
             
-    return db_update($products, $product_id, $data);
+    return db()->update("products", $product_id, $data);
 }
 
 
@@ -192,15 +187,12 @@ function products_edit($product_id, $arg_list)
  */
 function edit_dinamic_property($product_id, $arg_list)
 {
-    global $product_properties_values;
-    global $link;
-
     $property_id = $arg_list['property_id'];
     $value = $arg_list['value'];
 
-    $query = "DELETE FROM " . $product_properties_values .  " " .
-              "WHERE product_id = " . $product_id . " AND property_id = " . $property_id;
-    $result = db_query($query);
+    $query = "DELETE FROM product_properties_values  
+              WHERE product_id = " . $product_id . " AND property_id = " . $property_id;
+    $result = db()->query($query);
     if(!$result)
         return ESQL;
     return product_add_dinamic_property($product_id, $property_id, $value);
@@ -215,13 +207,12 @@ function edit_dinamic_property($product_id, $arg_list)
  */
 function product_add_static_properties($arg_list)
 {
-    global $products;
     $fields = array('name', 'country', 'weight', 'price', 'public', 
                     'product_category_id', 'trade_mark', 'description');
         foreach ($arg_list as $key => $value)
         if (in_array($key, $fields))
             $data[$key] = $value;
-    return db_insert($products, $data);
+    return db()->insert("products", $data);
 }
 
 /**
@@ -235,12 +226,10 @@ function product_add_static_properties($arg_list)
  */
 function product_add_dinamic_property($product_id, $property_id, $value)
 {
-    global $product_properties_values;
-
-    $query = "INSERT INTO " . $product_properties_values . " SET value = " .$value .
+    $query = "INSERT INTO product_properties_values SET value = " .$value .
               ", property_id = " .  $property_id . ", product_id = " . $product_id;
               "WHERE product_id = " . $product_id . " AND property_id = " . $property_id;
-    $result = db_query($query);
+    $result = db()->query($query);
     if($result)
         return 0;
     else
@@ -255,10 +244,8 @@ function product_add_dinamic_property($product_id, $property_id, $value)
  */
 function product_del($product_id)
 {
-    global $products;
-
-    $query = "DELETE FROM " . $products . " WHERE id = " .$product_id;
-    $result = db_query($query);
+    $query = "DELETE FROM products WHERE id = " .$product_id;
+    $result = db()->query($query);
     if(!result)
         return result;
 
@@ -267,8 +254,7 @@ function product_del($product_id)
 
 function del_dinamic_prop($product_id)
 {
-    global $product_properties_values;
-    $query = "DELETE FROM " . $product_properties_values .  " " .
-              "WHERE product_id = " . $product_id;
-    return db_query($query);
+    $query = "DELETE FROM product_properties_values 
+              WHERE product_id = " . $product_id;
+    return db()->query($query);
 }
