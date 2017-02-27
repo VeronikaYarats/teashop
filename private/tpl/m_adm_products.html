@@ -47,12 +47,12 @@
 			    <td>{public}</td>
 			    <td>{price}</td>
 			    <td>
-			        <a href="index.php?mod=adm_products&mode=edit_product&id={id}&cat_id={product_category_id}">
+			        <a href="{edit_url}">
 			            <img src="{http_img}edit.jpg">
 			        </a>
 			    </td>
 			    <td>
-			        <a href="exchange.php?mod=adm_articles&get_query=del_product&product_id={id}"
+			        <a href="{delete_url}"
 			        onClick="return window.confirm('Вы действительно хотите удалить продукт?')">
 			            <img src="{http_img}delete.jpg">
 			        </a>
@@ -138,6 +138,7 @@
                 	</p>
                 </div>
 	            <!-- END BLOCK : dinamic_property -->
+	           
 	            
 				<!-- START BLOCK : image_prev -->
 	            <div class="table_row">
@@ -161,6 +162,10 @@
                 	<p>URL</p>
                 	<p><input type="url" name="image_url"  value=""></p>
                 </div>
+                <div class="table_row">
+	            	<p class="top">Описание</p>
+	            	<p><textarea name="description"> {description}</textarea></p>
+	            </div>
       			<div class="table_row">
 	           		<p></p>
 	                <p> 

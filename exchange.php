@@ -3,12 +3,15 @@
 
 require_once "private/common/debug.php";
 require_once "private/common/message_box.php";
+require_once "private/common/database.php";
 require_once "private/common/auth_adm.php";
 require_once "private/common/images.php";
+require_once "private/common/url.php";
 require_once "private/articles.php";
 require_once "private/products.php";
 require_once "private/init.php";
 require_once "private/users.php";
+
 
 session_start();
 
@@ -99,12 +102,12 @@ if(isset($_POST['post_query']))
                 $block = "message_product_success_edit";
         }
 
-        /* Редактирование изображения *
-         $title = $array['trade_mark'] . ' ' . $array['name'];
-         $alt = $title;
-         $image_url = $_POST['image_url'];
-         /* Удаление изображение если выбран checkbox delete_image
-         * или загружено новое изображение */
+        /* Редактирование изображения */
+        $title = $array['trade_mark'] . ' ' . $array['name'];
+        $alt = $title;
+        $image_url = $_POST['image_url'];
+        /* Удаление изображение если выбран checkbox delete_image
+           или загружено новое изображение */
         if(($_POST['img_id'] && ($image_url || !$_FILES['image']['error'])) ||
             $_POST['delete_image']) {
             $err = del_image_from_object('products', $id, $_POST['img_id']);
@@ -188,18 +191,18 @@ if(isset($_POST['post_query']))
 
         /* Авторизация администратора сайта */
     case "adm_login":
-         
         $login =  addslashes($_POST['name']);
         $pass = addslashes($_POST['password']);
         $user = user_get_by_pass($login, $pass);  
         if($user) {
             auth_store_admin($user[0]['id']);
-            header( 'Location: index.php?mod=adm_articles');
+            $url = mk_url(array('mod' => 'adm_products'));
         }
         else {
             message_box_display("message_adm_login_incorrect");
-            header( 'Location: index.php?mod=adm_login');
+            $url = mk_url(array('mod' => 'adm_login'));
         }
+        header( 'Location: '. $url);
         break;
         
         /* Выбор списка продуктов по категории */
@@ -214,14 +217,15 @@ if(isset($_POST['post_query']))
 }
 
 /* Обработчик GET запросов */
-if(isset($_GET['get_query']))
-    switch ($_GET['get_query']) {
+    $argl_list = $_GET;
+if(isset($argl_list['get_query']))
+    switch ($argl_list['get_query']) {
 
     /* Удаление статьи */
     case "del_article":
         if(!auth_get_admin())
             continue;
-        $id = $_GET['article_id'];
+        $id = $argl_list['article_id'];
         $err = article_del($id);
         switch ($err) {
         case 0:
@@ -238,11 +242,13 @@ if(isset($_GET['get_query']))
             break;
         }
         message_box_display($block, $data);
-        header('Location: index.php?mod=adm_articles');
+        $url = mk_url(array('mod' => 'adm_products'));
+        header('Location: ' . $url);
         break;
 
         /* Выход из режима администратора сайта */
     case "adm_logout":
+        
         auth_adm_remove();
         header('Location: index.php');
         break;
@@ -251,7 +257,7 @@ if(isset($_GET['get_query']))
     case "del_product":
         if(!auth_get_admin())
             continue;
-        $product_id = $_GET['product_id'];
+        $product_id = $argl_list['id'];
         $err = product_del($product_id);
         if(get_img_id_by_product_id($product_id))
             del_images_object('products', $product_id);
@@ -259,7 +265,9 @@ if(isset($_GET['get_query']))
             $block = "message_product_success_del";
         else
             $block = "message_esql";
+        
         message_box_display($block);
-        header('Location: index.php?mod=adm_products');
+        $url = mk_url(array('mod' => 'adm_products'));
+        header('Location: ' . $url);
         break;
 }

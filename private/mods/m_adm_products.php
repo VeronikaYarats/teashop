@@ -37,10 +37,22 @@ function m_adm_products($arg_list)
         $tpl->assign("category_name", array('category_name' => $cat_name));
 
         /* вывод списка продуктов выбранной категории */
+       
         $tpl->assign("products_list", array('cat_id' => $cat_id));
         $products = products_get_list_by_category($cat_id);
-        foreach($products as $product)
+
+        foreach($products as $product){
+            $url_edit = mk_url(array('mod' => 'adm_products',
+                                'mode' => 'edit_product',
+                                'id' => $product['id'],
+                                'cat_id' => $product['product_category_id']));
+            $url_del = mk_url(array('mod' => 'adm_products',
+                                'get_query' => 'del_product',
+                                'id' => $product['id']) );
+            $product['edit_url'] = $url_edit;
+            $product['delete_url'] = $url_del;
             $tpl->assign("products_row_table", $product);
+        }
         return $tpl->result();
         break;
          
