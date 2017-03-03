@@ -29,7 +29,7 @@ function m_products($arg_list)
        	                    'mini' => array('w' => 100));
        	$image = get_first_object_image('products', $product_id, $image_sizes);
        	
-       	$url_params = array('mod' => 'product', 'cat_id' => $cat_id, 'id' => $product_id);
+       	$url_params = array('mod' => 'product', 'cat_id' => $cat_id, 'key' => $product['key']);
        	$url = mk_url($url_params);
        	if($image) {
        	    $image['url'] = $url;

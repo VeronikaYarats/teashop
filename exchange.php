@@ -11,6 +11,7 @@ require_once "private/articles.php";
 require_once "private/products.php";
 require_once "private/init.php";
 require_once "private/users.php";
+require_once "private/clean_url.php";
 
 
 session_start();
@@ -22,7 +23,7 @@ if(isset($_POST['post_query']))
    	/* Редактирование статьи */
     case "article_edit":
         if(!auth_get_admin())
-            continue;
+            break;
         $data = $_POST;
         $id = $_POST['article_id'];
         $public = isset($_POST['public']);
@@ -43,13 +44,13 @@ if(isset($_POST['post_query']))
             break;
         }
         message_box_display($block, $data);
-        header('Location: index.php?mod=adm_articles');
+        header('Location: ' . mk_url(array('mod' => 'adm_articles')));
         break;
 
         /* Добавление новой статьи */
     case "article_add":
         if(!auth_get_admin())
-            continue;
+            break;
         $data = $_POST;
         $public = isset($_POST['public']);
         $data["public"] = $public;
@@ -69,25 +70,28 @@ if(isset($_POST['post_query']))
             break;
         }
         message_box_display($block, $data);
-        header('Location: index.php?mod=adm_articles');
+        header('Location: ' . mk_url(array('mod' => 'adm_articles')));
         break;
 
         /* Редактирование продукта */
     case "edit_product":
         if(!auth_get_admin())
-            continue;
+            break;
         $id = $_POST['product_id'];
         $cat_id = $_POST['cat_id'];
-        if(!auth_get_admin())
-            continue;
         $public = isset($_POST['public']);
         $data = $_POST;
         $data["public"] = $public;
         /* Редактирование статический свойств */
         $err = products_edit($id, $data);
-        if ($err < 0)
-            $block = "message_esql";
-
+        if($err == EINVAL) {
+            $block = "message_einval";
+            message_box_display($block, array('product_id' => $id));
+            header('Location: ' . mk_url(array('mod' => 'adm_products', 
+                                            'mode' => 'list_products', 
+                                            'cat_id' => $cat_id)));
+            break;
+        }
         /* Редактирование динамических свойств */
         $dinamic_properties = $_POST['dinamic_property'];
         foreach($dinamic_properties as $dinamic_property) {
@@ -130,24 +134,28 @@ if(isset($_POST['post_query']))
         }
 
         message_box_display($block, array('product_id' => $id));
-        header('Location: index.php?mod=adm_products&mode=list_products&cat_id='. $cat_id);
+        header('Location: ' . mk_url(array('mod' => 'adm_products', 
+                                            'mode' => 'list_products', 
+                                            'cat_id' => $cat_id)));
         break;
 
         /* Добавление продукта */
     case "add_product":
-        $data = $_POST;
         if(!auth_get_admin())
-            continue;
+            break;
+        $data = $_POST;
         $public = isset($_POST['public']);
         $data["public"] = $public;
         /* добавляем продукт в талицу products */
         $product_id = product_add_static_properties($data);
-        if ($product_id < 0) {
-            $block = "message_esql";
+        if ($product_id == EINVAL) {
+            $block = "message_einval";
+            message_box_display($block, array('product_id' => $product_id));
+            header('Location: ' . mk_url(array('mod' => 'adm_products', 
+                                            'mode' => 'list_products', 
+                                            'cat_id' => $cat_id)));
             break;
         }
-        else
-            $block = "message_product_success_add";
          
         /* добавляем динамические свойства */
         $dinamic_properties = $_POST['dinamic_property'];
@@ -169,7 +177,7 @@ if(isset($_POST['post_query']))
         /* Добавление изображение */
         $title = $data['trade_mark'] . ' ' . $data['name'];
         $alt = $title;
-
+        $cat_id = $_POST['product_category_id'];
         $image_url = $_POST['image_url'];
         if($image_url)
             $img_id = download_image($image_url, '', $alt, $title);
@@ -179,14 +187,15 @@ if(isset($_POST['post_query']))
          
         if(!is_NULL($img_id)) {
             if($img_id > 0)
-                add_image_to_object('products', $id, $img_id);
+                dump(add_image_to_object('products', $product_id, $img_id));
             else
                 $block = "message_image_add_error";
         }
-        	
+        
         message_box_display($block, array('product_id' => $product_id));
-        header('Location: index.php?mod=adm_products&mode=list_products&cat_id='
-                . $_POST['product_category_id']);
+        header('Location: ' . mk_url(array('mod' => 'adm_products', 
+                                            'mode' => 'list_products', 
+                                            'cat_id' => $cat_id)));
         break;
 
         /* Авторизация администратора сайта */
@@ -196,13 +205,13 @@ if(isset($_POST['post_query']))
         $user = user_get_by_pass($login, $pass);  
         if($user) {
             auth_store_admin($user[0]['id']);
-            $url = mk_url(array('mod' => 'adm_products'));
+            $url_return = mk_url(array('mod' => 'adm_products'));
         }
         else {
             message_box_display("message_adm_login_incorrect");
-            $url = mk_url(array('mod' => 'adm_login'));
+            $url_return = mk_url(array('mod' => 'adm_login'));
         }
-        header( 'Location: '. $url);
+        header( 'Location: '. $url_return);
         break;
         
         /* Выбор списка продуктов по категории */
@@ -211,21 +220,23 @@ if(isset($_POST['post_query']))
             $cat_id = 1;
         else
             $cat_id = $_POST["category_name"];
-
-        header('Location: index.php?mod=adm_products&mode=list_products&cat_id='.$cat_id);
+        
+        header('Location: ' . mk_url(array('mod' => 'adm_products', 
+                                            'mode' => 'list_products', 
+                                            'cat_id' => $cat_id)));
         break;
 }
 
 /* Обработчик GET запросов */
-    $argl_list = $_GET;
-if(isset($argl_list['get_query']))
-    switch ($argl_list['get_query']) {
+
+if(isset($_GET['get_query']))
+    switch ($_GET['get_query']) {
 
     /* Удаление статьи */
     case "del_article":
         if(!auth_get_admin())
-            continue;
-        $id = $argl_list['article_id'];
+            break;
+        $id = $_GET['article_id'];
         $err = article_del($id);
         switch ($err) {
         case 0:
@@ -242,22 +253,20 @@ if(isset($argl_list['get_query']))
             break;
         }
         message_box_display($block, $data);
-        $url = mk_url(array('mod' => 'adm_products'));
-        header('Location: ' . $url);
+        header('Location: ' . mk_url(array('mod' => 'adm_products')));
         break;
 
         /* Выход из режима администратора сайта */
     case "adm_logout":
-        
         auth_adm_remove();
-        header('Location: index.php');
+        header('Location: '. mk_url(array()));
         break;
          
         /* Удаление продукта */
     case "del_product":
         if(!auth_get_admin())
-            continue;
-        $product_id = $argl_list['id'];
+            break;
+        $product_id = $_GET['id'];
         $err = product_del($product_id);
         if(get_img_id_by_product_id($product_id))
             del_images_object('products', $product_id);
@@ -267,7 +276,6 @@ if(isset($argl_list['get_query']))
             $block = "message_esql";
         
         message_box_display($block);
-        $url = mk_url(array('mod' => 'adm_products'));
-        header('Location: ' . $url);
+        header('Location: ' . mk_url(array('mod' => 'adm_products')));
         break;
 }

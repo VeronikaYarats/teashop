@@ -11,7 +11,7 @@
     
     	/* выпадающий список категорий */
     	<!-- START BLOCK : categories_list -->                       
-        	<option value="index.php?mod=adm_products&mode=list_products&cat_id={id}" {selected}>
+        	<option value="{url}" {selected}>
         		{category_name} 
         	</option>
     	<!-- END BLOCK : categories_list -->
@@ -61,7 +61,7 @@
             <!-- END BLOCK : products_row_table -->
         
         </table>
-	<a class="submit_button" href="index.php?mod=adm_products&mode=add_product&cat_id={cat_id}">Добавить продукт</a> 
+	<a class="submit_button" href="{add_url}">Добавить продукт</a> 
     </div>
 <!-- END BLOCK : products_list -->
 
@@ -99,6 +99,10 @@
 					<p>Публиковать</p>
 	                <p><input type="checkbox" name="public" value="public" {public} > </p>
 				</div>
+				<div class="table_row">
+                    <p>Key</p>
+                    <p><input type="text" name="key" value="{key}"> </p>
+                </div>
 	      		<div class="table_row">
 	                <p>Торговая марка</p>
 	                <p><input type="text" name="trade_mark" value="{trade_mark}"> </p>

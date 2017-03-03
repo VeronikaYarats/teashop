@@ -14,10 +14,23 @@ function m_adm_articles($arg_list)
     /* вывод списка статей */
     case "list_articles":
         page_set_title("статьи");
-        $tpl->assign("articles_list");
+        $add_url = mk_url(array('mod' => 'adm_articles',
+                            'mode' => 'add_article'));
+        $tpl->assign("articles_list", array('add_url' => $add_url));
         $articles_list = article_get_list();
-        foreach($articles_list as $article)
+        
+        
+        foreach($articles_list as $article) {
+            $url_edit = mk_url(array('mod' => 'adm_articles',
+                                    'mode' => 'edit_article',
+                                    'id' => $article['id']));
+            $article['edit_url'] = $url_edit;
+            $url_del = mk_url(array('mod' => 'adm_articles', 
+                                    'get_query' => 'del_article', 
+                                    'article_id' => $article['id']));
+            $article['del_url'] = $url_del;
             $tpl->assign("articles_row_table", $article);
+        }
         break;
 
         /* вывод формы редактирования статьи */
@@ -29,7 +42,7 @@ function m_adm_articles($arg_list)
             $article['public'] = "checked";
 
         $tpl->assign("article_add_edit", $article);
-        $tpl->assign("article_query_edit") ;
+        $tpl->assign("article_query_edit");
         $tpl->assign("article_edit", array('id' => $article_id));
         $tpl->assign("article_edit_submit");
         break;

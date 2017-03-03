@@ -9,25 +9,24 @@ require_once "private/common/message_box.php";
 require_once "private/common/auth_adm.php";
 require_once "private/common/images.php";
 require_once "private/common/url.php";
+/* начальная инициализация системы */
+require_once "private/init.php";
 /* файлы различных сущностей */
+require_once "private/clean_url.php";
+require_once "private/site_menu.php";
 require_once "private/articles.php";
 require_once "private/products.php";
 
-/* начальная инициализация системы */
-require_once "private/init.php";
-
 session_start();
 
-$clean_url = global_conf()['clean_url'];
-
-if($clean_url) {
+$clean_url_enable = global_conf()['clean_url_enable'];
+if($clean_url_enable) {
     $url = $_SERVER['REDIRECT_URL'];
     $arg_list = url_decode($url);
 }
 else
     $arg_list = $_GET;
-
-    
+   
 /* Выбор режима работы */
 $mod = "articles";
 if(isset($arg_list['mod']))
@@ -47,20 +46,23 @@ if (auth_get_admin())
         $mod_content = m_adm_products($arg_list);
         break;
 
-    default:
-        require_once "private/mods/m_articles.php";
-       	$mod_content = m_articles($arg_list);
+    case '404':
+        require_once "private/mods/m_404.php";
+       	$mod_content = m_404();
        	break;
     }
 
 /* Попытка запуска публичных режимов работы */
 switch ($mod) {
 case 'adm_login':
-    require_once "private/mods/m_adm_login.php";
-    if (auth_get_admin())
-        break;
-    else
+    if (auth_get_admin()) {
+        require_once "private/mods/m_adm_products.php";
+        $mod_content = m_adm_products($arg_list);
+    }
+    else {
+        require_once "private/mods/m_adm_login.php";
         $mod_content = m_adm_login($arg_list);
+    }
     break;
 case 'articles':
     require_once "private/mods/m_articles.php";
@@ -74,48 +76,34 @@ case 'product':
     require_once "private/mods/m_product.php";
     $mod_content = m_product($arg_list);
     break;
-/*default:
-    require_once "private/mods/404.php";
-    $mod_content = not_found();
-    break;*/
+case '404':
+    require_once "private/mods/m_404.php";
+    $mod_content = m_404();
+    break;
 }
 
-/* Если введен некорректный mode то вывод статьи по умолчанию */
+/* Если введен некорректный mode то вывод 404 */
 if (!$mod_content) { 
-    require_once "private/mods/m_articles.php";
-    $mod_content = m_articles($arg_list);
+    require_once "private/mods/m_404.php";
+    $mod_content = m_404();
     }
 
 /* Заполнение главного шаблона */ 
-$welcome_url = mk_url(array('mod' => 'articles', 'key' => 'welcome'));
-$coffee_url = mk_url(array('mod' => 'products', 'cat_id' => '2'));
-$contacts_url = mk_url(array('mod' => 'articles', 'key' => 'contacts')); 
-$tea_url = mk_url(array('mod' => 'products', 'cat_id' => '1')   );
-
 $tpl = new strontium_tpl("private/tpl/skeleton.html", 
                         global_conf()['global_marks'], false);
-                        
 $tpl->assign(NULL, array('title' => page_get_title(),
-                        'mod_content' => $mod_content, 
-                        'welcome_url' => $welcome_url,
-                        'tea_url' => $tea_url,
-                        'coffee_url' => $coffee_url,
-                        'contacts_url' => $contacts_url));
+                         'mod_content' => $mod_content));
 
+foreach($site_menu as $menu_item){
+    if(auth_get_admin())
+        $tpl->assign("menu", $menu_item);
+    else
+        if(!$menu_item['adm'])
+            $tpl->assign("menu", $menu_item);
+}
 /* Вывод всплывающего сообщения, если нужно */
 $win = message_box_check_for_display();
-if($win)
+if($win) 
     $tpl->assign($win['block'], $win['data']);
-
-/* Вывод меню администратора если автозирован */   
-if(auth_get_admin()) {
-    $adm_articles = mk_url(array('mod' => 'adm_articles'));
-    $adm_products = mk_url(array('mod' => 'adm_products'));
-    $adm_logout = mk_url(array('get_query' => 'adm_logout')); 
-    
-    $tpl->assign("admin_menu", array('adm_articles' => $adm_articles,
-                                    'adm_products' => $adm_products,
-                                    'adm_logout' => $adm_logout ));
-}
-
+   
 echo $tpl->result();
