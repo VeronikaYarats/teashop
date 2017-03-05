@@ -211,6 +211,31 @@ article.prod_list_item {
 	display: inline;	
 }
 
+/* описание отдельного продукта */
+.product div.table_cell:first-child {
+    width:40%;
+}
+
+.product {
+    width:80%;
+    margin: 0px auto;   
+    padding:15px;
+}
+
+.product p {
+    text-indent: 3em;
+    text-align: justify;    
+}
+.product h1 {
+    margin-top:0px;
+    color: #819930;
+}
+ul.product_properties {
+    list-style: none;   
+    text-align: left;
+    padding-left: 0px;
+    margin: 0px;    
+}
 
 /* стили для форм */
 .form {
