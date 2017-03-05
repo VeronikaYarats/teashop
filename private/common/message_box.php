@@ -21,6 +21,9 @@ function message_box_display($block, $data = array())
  */
 function message_box_check_for_display()
 {
+    if (!isset($_SESSION['display_window']))
+        return null;
+        
     $block = $_SESSION['display_window']["name"];
     $data = $_SESSION['display_window']["data"];
     unset($_SESSION['display_window']);
