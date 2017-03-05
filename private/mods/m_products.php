@@ -15,7 +15,9 @@ function m_products($arg_list)
     foreach($products as $product) {
         if (!$product['public'])
             continue;
-
+        $url_params = array('mod' => 'product', 'cat_id' => $cat_id, 'key' => $product['key']);
+        $url = mk_url($url_params);
+        $product['url'] = $url;
         $tpl->assign("products", $product);
        	$product_id = $product['id'];
        	$properties = product_get_dynamic_properties($product_id);
@@ -28,12 +30,8 @@ function m_products($arg_list)
        	$image_sizes = array('big' => array('w' => 0),
        	                    'mini' => array('w' => 100));
        	$image = get_first_object_image('products', $product_id, $image_sizes);
-       	
-       	$url_params = array('mod' => 'product', 'cat_id' => $cat_id, 'key' => $product['key']);
-       	$url = mk_url($url_params);
        	if($image) {
        	    $image['url'] = $url;
-       	    $image['product_id'] = $product_id;
        	    $tpl->assign('image',$image);
        	}
        	 
