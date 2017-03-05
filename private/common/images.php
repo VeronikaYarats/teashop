@@ -396,7 +396,7 @@ function del_image_from_object($obj_type, $obj_id, $img_id)
  */
 function del_images_object($obj_type, $obj_id)
 {
-    $rows = db_query('SELECT img_id FROM object_images WHERE obj_type = "' . strtok($obj_type, " ") .
+    $rows = db()->query('SELECT img_id FROM object_images WHERE obj_type = "' . strtok($obj_type, " ") .
                                      '" AND obj_id = ' . (int)$obj_id);
     if (!$rows)
         return false;
