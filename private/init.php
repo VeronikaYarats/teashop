@@ -23,7 +23,8 @@ function global_conf()
                                         'http_img' => $http_root_path . 'i/',
                                         'http_js' => $http_root_path . 'js/'),
                 'http_root_path' => $http_root_path,
-                'absolute_root_path' => $absolute_root_path);
+                'absolute_root_path' => $absolute_root_path,
+                'clean_url_enable' => 1); // Включение чистых URL
 }
 
 /* Открывает соединение с базой данных */

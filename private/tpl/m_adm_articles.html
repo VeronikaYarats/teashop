@@ -20,11 +20,11 @@
        		<td>{name}</td>
       		<td>{public}</td>
      		<td>
-    			<a href="index.php?mod=adm_articles&mode=edit_article&id={id}">
+    			<a href="{edit_url}">
   				<img src="{http_img}edit.jpg"></a>
     		</td>
     		<td>
-   				<a href="exchange.php?mod=adm_articles&get_query=del_article&article_id={id}"
+   				<a href="{del_url}"
      			onClick="return window.confirm('Вы действительно хотите удалить статью?')">
       			<img src="{http_img}delete.jpg"></a>
     		</td>
@@ -33,7 +33,7 @@
  
 	</table>
 	
-	<a class="submit_button" href="index.php?mod=adm_articles&mode=add_article">Добавить статью</a>
+	<a class="submit_button" href="{add_url}">Добавить статью</a>
 </section>
 <!-- END BLOCK : articles_list -->
 

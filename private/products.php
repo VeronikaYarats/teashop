@@ -1,6 +1,7 @@
 <?php
 /* Функции для работа с продуктами */
 
+
 /**
  * возвращает значения таблицы products
  * @param $id - id продукта
@@ -13,6 +14,18 @@ function product_get_by_id($id)
     return db()->query($query);
 }
 
+
+/**
+ * возвращает значения таблицы products
+ * @param $key - key продукта
+ * @return массив - если запрос успешно
+ *         ESQL - если запрос не выполнен
+ */
+function product_get_by_key($key)
+{
+    $query = "SELECT * FROM products WHERE `key` = '" . $key . "'";
+    return db()->query($query);  
+}
 /**
  * Возвращает id изображения продукта
  * @param $id
@@ -168,13 +181,17 @@ function product_get_dynamic_properties ($product_id)
  */
 function products_edit($product_id, $arg_list)
 {
-    $fields = array('id', 'name', 'country', 'weight', 'price', 
-                    'public', 'trade_mark', 'description');
-    foreach ($arg_list as $key => $value)
-        if (in_array($key, $fields))
-            $data[$key] = $value;
-            
-    return db()->update("products", $product_id, $data);
+    $product = product_get_by_key($arg_list['key']);
+    if(($product['0']['id'] == $product_id) || !($product)) {
+        $fields = array('id', 'key', 'name', 'country', 'weight', 'price', 
+                        'public', 'trade_mark', 'description');
+        foreach ($arg_list as $key => $value)
+            if (in_array($key, $fields))
+                $data[$key] = $value;
+        return db()->update("products", $product_id, $data);
+    }
+    else 
+        return EINVAL;   
 }
 
 
@@ -207,7 +224,11 @@ function edit_dinamic_property($product_id, $arg_list)
  */
 function product_add_static_properties($arg_list)
 {
-    $fields = array('name', 'country', 'weight', 'price', 'public', 
+    /* если продукт с таким ключем уже существует*/
+    $product = product_get_by_key($arg_list['key']);
+    if($product)
+        return EINVAL;
+    $fields = array('key', 'name', 'country', 'weight', 'price', 'public', 
                     'product_category_id', 'trade_mark', 'description');
         foreach ($arg_list as $key => $value)
         if (in_array($key, $fields))

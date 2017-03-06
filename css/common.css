@@ -196,12 +196,12 @@ article.prod_list_item {
 	border-bottom-right-radius: 10px;	
 }
 
-/* Название продукта */
-.prod_name {
+/* ссылка на описание продукта */
+.prod_list_item li a {
 	font-size: 1.1em;
-	color: #819930;
-	text-decoration: underline;
-}
+    color: #819930;
+    text-decoration: underline;
+	}
 
 .uppercase {
 	text-transform: uppercase;
@@ -226,10 +226,12 @@ article.prod_list_item {
     text-indent: 3em;
     text-align: justify;    
 }
+
 .product h1 {
     margin-top:0px;
     color: #819930;
 }
+
 ul.product_properties {
     list-style: none;   
     text-align: left;

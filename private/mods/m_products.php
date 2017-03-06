@@ -15,13 +15,15 @@ function m_products($arg_list)
     foreach($products as $product) {
         if (!$product['public'])
             continue;
-
+        $url_params = array('mod' => 'product', 'cat_id' => $cat_id, 'key' => $product['key']);
+        $url = mk_url($url_params);
+        $product['url'] = $url;
         $tpl->assign("products", $product);
        	$product_id = $product['id'];
        	$properties = product_get_dynamic_properties($product_id);
        	if($properties < 0)
        	    continue;
-
+        
        	foreach($properties as $property)
        	    $tpl->assign('dymnamic_property',$property);
        	$products_count++;
@@ -29,7 +31,7 @@ function m_products($arg_list)
        	                    'mini' => array('w' => 100));
        	$image = get_first_object_image('products', $product_id, $image_sizes);
        	if($image) {
-       	    $image['product_id'] = $product_id;
+       	    $image['url'] = $url;
        	    $tpl->assign('image',$image);
        	}
        	 

@@ -31,27 +31,49 @@ function m_adm_products($arg_list)
                 $cat_name = $category['category_name'];
                 $cat['selected'] = 'selected';
             }
+            $cat['url'] = mk_url(array('mod' => 'adm_products', 
+                                        'mode' => 'list_products', 
+                                        'cat_id' => $cat['id']));
             $tpl->assign("categories_list", $cat);
         }
         /* вывод названия выбранной категории */
         $tpl->assign("category_name", array('category_name' => $cat_name));
 
         /* вывод списка продуктов выбранной категории */
-        $tpl->assign("products_list", array('cat_id' => $cat_id));
+       
+        $url_add = mk_url(array('mod' => 'adm_products',
+                                    'mode' => 'add_product',
+                                    'cat_id' => $cat_id
+                                    ));
+        $tpl->assign("products_list", array('cat_id' => $cat_id, 'add_url' => $url_add));
         $products = products_get_list_by_category($cat_id);
-        foreach($products as $product)
+            
+        foreach($products as $product){
+            $url_edit = mk_url(array('mod' => 'adm_products',
+                                'mode' => 'edit_product',
+                                'key' => $product['key'],
+                                ));
+            $url_del = mk_url(array('mod' => 'adm_products',
+                                'get_query' => 'del_product',
+                                'id' => $product['id']) );
+
+            $product['edit_url'] = $url_edit;
+            $product['delete_url'] = $url_del;
             $tpl->assign("products_row_table", $product);
+        }
         return $tpl->result();
         break;
          
     case "edit_product":
         page_set_title("редактирование продукта");
-        $product_id = $arg_list['id'];
-        $cat_id = $arg_list['cat_id'];
+        $product_key = $arg_list['key'];
+        //$cat_id = $arg_list['cat_id'];
         /* Вывод статических свойств */
-        $product = product_get_by_id($product_id);
+        $product = product_get_by_key($product_key);
         if($product[0]['public'] == 1)
             $product[0]['public'] = "checked";
+        $product_id = $product[0]['id'];
+        $cat_id = $product[0]['product_category_id'];
         $tpl->assign("product_add_edit", $product[0]);
         $tpl->assign("product_edit",array("id" => $product_id));
         $tpl->assign("product_query_edit");

@@ -11,7 +11,7 @@
     
     	/* выпадающий список категорий */
     	<!-- START BLOCK : categories_list -->                       
-        	<option value="index.php?mod=adm_products&mode=list_products&cat_id={id}" {selected}>
+        	<option value="{url}" {selected}>
         		{category_name} 
         	</option>
     	<!-- END BLOCK : categories_list -->
@@ -47,12 +47,12 @@
 			    <td>{public}</td>
 			    <td>{price}</td>
 			    <td>
-			        <a href="index.php?mod=adm_products&mode=edit_product&id={id}&cat_id={product_category_id}">
+			        <a href="{edit_url}">
 			            <img src="{http_img}edit.jpg">
 			        </a>
 			    </td>
 			    <td>
-			        <a href="exchange.php?mod=adm_articles&get_query=del_product&product_id={id}"
+			        <a href="{delete_url}"
 			        onClick="return window.confirm('Вы действительно хотите удалить продукт?')">
 			            <img src="{http_img}delete.jpg">
 			        </a>
@@ -61,7 +61,7 @@
             <!-- END BLOCK : products_row_table -->
         
         </table>
-	<a class="submit_button" href="index.php?mod=adm_products&mode=add_product&cat_id={cat_id}">Добавить продукт</a> 
+	<a class="submit_button" href="{add_url}">Добавить продукт</a> 
     </div>
 <!-- END BLOCK : products_list -->
 
@@ -99,6 +99,10 @@
 					<p>Публиковать</p>
 	                <p><input type="checkbox" name="public" value="public" {public} > </p>
 				</div>
+				<div class="table_row">
+                    <p>Key</p>
+                    <p><input type="text" name="key" value="{key}"> </p>
+                </div>
 	      		<div class="table_row">
 	                <p>Торговая марка</p>
 	                <p><input type="text" name="trade_mark" value="{trade_mark}"> </p>
@@ -138,6 +142,7 @@
                 	</p>
                 </div>
 	            <!-- END BLOCK : dinamic_property -->
+	           
 	            
 				<!-- START BLOCK : image_prev -->
 	            <div class="table_row">
@@ -161,6 +166,10 @@
                 	<p>URL</p>
                 	<p><input type="url" name="image_url"  value=""></p>
                 </div>
+                <div class="table_row">
+	            	<p class="top">Описание</p>
+	            	<p><textarea name="description"> {description}</textarea></p>
+	            </div>
       			<div class="table_row">
 	           		<p></p>
 	                <p> 

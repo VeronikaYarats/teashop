@@ -6,22 +6,25 @@
 				<div class="table_cell"> 
 			
 			<!-- START BLOCK : image -->
-					<a href="http://sr38.org/veroshop/index.php?mod=product&id={product_id}"><img class="image" src="{url_mini}" alt="{alt}" title="{title}" ></a>
+					<a href="{url}">
+					   <img class="image" src="{url_mini}" alt="{alt}" title="{title}" >
+					</a>
  			<!-- END BLOCK : image -->
 	
 				</div>
 				<div class="table_cell">
-					<ul>
-						<li class="prod_name inline uppercase">{trade_mark} </li>
-						<li class="prod_name inline">{name} </li>
+				    <ul>
+				        <li> <a href="{url}">
+					       <span class="uppercase">{trade_mark}</span> {name}</a>
+					    </li>
 					    <li> производитель: {country}</li>
 					    
 					<!-- START BLOCK : dymnamic_property -->
-						<li> {name}: {value}</li>
+					    <li> {name}: {value}</li>
 					<!-- END BLOCK : dymnamic_property -->
 					
-						 <li> вес: {weight} гр</li>
-						 <li> цена: {price} руб</li> 
+					    <li> вес: {weight} гр</li>
+                        <li> цена: {price} руб</li> 
 					</ul>
 				</div>
 			</div> 
