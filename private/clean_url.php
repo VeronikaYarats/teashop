@@ -20,73 +20,62 @@ function url_encode($params)
         }
         if(!isset($params['key']))
             return $clean_url;
-        $clean_url .= $params['key'];
-        break;
-
+            
+        return $clean_url . $params['key'];
+        
     case 'articles':
         switch($params['key']) {
         case 'welcome':
-            break;
+            return $clean_url;
         case 'contacts':
-            $clean_url .= 'contacts/';
-            break;
+            return $clean_url . 'contacts/';
         }
-        break;
         
     case 'adm_login':
-        $clean_url .= 'admin/';
-        break;
-        
+        return $clean_url . 'admin/';
+
     case 'adm_products':
         $clean_url .= 'admin/products/';
         if(!isset($params['mode']))
             return $clean_url;
+            
         switch($params['mode']) {
         case 'edit_product':
             $clean_url .= 'edit/';
             if(!isset($params['key']))
-                return $params;
-            $clean_url .= $params['key'];
-            break;
+                return $clean_url;
+                
+            return  $clean_url . $params['key'];
+            
         case 'add_product':
-            $clean_url .= 'add/';
             switch($params['cat_id']) {
             case '1':
-                $clean_url .= 'tea/';
-                break;  
+                return $clean_url . 'add/tea/';  
             case '2':
-                $clean_url .= 'coffee/';
-                break;         
+                return $clean_url = 'add/coffee/';       
             }
-            break; 
+            
         case 'list_products':
             switch($params['cat_id']) {
             case '1':
-                $clean_url .= 'tea/';
-                break;  
+                return $clean_url . 'tea/';  
             case '2':
-                $clean_url .= 'coffee/';
-                break; 
+                return $clean_url . 'coffee/';
             }
         }
-        break;
     
     case 'adm_articles':
         $clean_url .= 'admin/articles/';
         if(!isset($params['mode']))
             return $clean_url;
+            
         switch($params['mode']) {
         case 'edit_article':
-            $clean_url .= 'edit/';
-            $clean_url .=  $params['id'];
-            break;
+            return $clean_url . 'edit/' . $params['id'];
         case 'add_article':
-            $clean_url .= 'add/';
-            break;
+            return $clean_url . 'add/';
         }
-        break;
     }
-    return $clean_url; 
 }
 
 /* Функиця анализирует чистый url и возвращает входные параметры сайта */
@@ -94,121 +83,118 @@ function url_decode($clean_url)
 {
     $rows = url_parser($clean_url);
     $depth = url_get_root_depth();
-    /* откидываются элементы массива на глубину htt_root_path */
+    /* откидывается часть урла до корня сайта */
     array_splice($rows, 0, $depth);
-    $params = array();
     
     if(!$rows) {
-        $params['mod'] = 'articles';
-        $params['key'] = 'welcome';
-        return $params;
+        return array('mod' => 'articles', 
+                    'key' => 'welcome');
     }
    
     switch($rows[0]) {
     case 'contacts':
-        $params['mod'] = 'articles';
-        $params['key'] = 'contacts';
-        break;
+        return array('mod' => 'articles', 
+                    'key' => 'contacts');
         
     case 'products':
-        $params['mod'] = 'products';
         switch($rows[1]) {
         case 'tea':
-           $params['cat_id'] = '1';
-           break; 
+            if(isset($rows[2]))
+                return array('mod' => 'product',
+                            'cat_id' => '1',
+                            'key' => $rows[2]);
+                
+            return array('mod' => 'products',
+                        'cat_id' => '1');
         case 'coffee':
-           $params['cat_id'] = '2';
-           break;
-           
+            if(isset($rows[2]))
+                return array('mod' => 'product',
+                        'cat_id' => '2',
+                        'key' => $rows[2]);
+                
+            return array('mod' => 'products',
+                        'cat_id' => '2');
         default:
-            $params['mod'] = '404';
-            return $params;
+            return array('mod' => '404');   
         }
-        if(isset($rows[2])) {
-            $params['mod'] = 'product';
-            $params['key'] = $rows[2];
-            }
-        break;
         
     case 'admin':
-        if(!isset($rows[1])) {
-            $params['mod'] = 'adm_login';
-            return $params;   
-        }
+        if(!isset($rows[1])) 
+            return array('mod' => 'adm_login');   
+       
         switch ($rows[1]) {
         case 'articles':
-            $params['mod'] = 'adm_articles';
             if(!isset($rows[2]))
-                return $params;
+                return array('mod' =>'adm_articles');
                 
             switch ($rows[2]) {
             case 'edit':
-                $params['mode'] = 'edit_article';
-                $params['id'] = $rows[3];
-                break;
+                return array('mod' => 'adm_articles',
+                            'mode' => 'edit_article',
+                            'id' => $rows[3]);
+               
             case 'add':
-                $params['mode'] = 'add_article';
-                break;
+                return array('mod' => 'adm_articles',
+                            'mode' => 'add_article');
+                
             default:
-                $params['mod'] = '404'; 
+                return array('mod' => '404'); 
             }
-            break;
+            
         case 'products':
-            $params['mod'] = 'adm_products';
             if(!isset($rows[2]))
-                return $params;
+                return array('mod' => 'adm_products');
                 
             switch ($rows[2]) {
             case 'edit':
-                $params['mode'] = 'edit_product';
-                $params['key'] = $rows[3];
-                break;
+                return array('mod' => 'adm_products',
+                            'mode' => 'edit_product',
+                            'key' => $rows[3]);
                 
             case 'add':
-                $params['mode'] = 'add_product';
                 switch ($rows[3]) {
                 case 'tea':
-                    $params['cat_id'] = '1';
-                    break;
+                    return array('mod' => 'adm_products',
+                                'mode' => 'add_product',
+                                'cat_id' => '1');
                 case 'coffee':
-                    $params['cat_id'] = '2'; 
-                    break;  
+                    return array('mod' => 'adm_products',
+                                'mode' => 'add_product',
+                                'cat_id' => '2');  
                 default:
-                    $params['mod'] = '404';
+                    return array('mod' => '404');
                 }
-                break;
-            
+                
             case 'tea':
-                $params['cat_id'] = '1';
-                break;
+                return array('mod' => 'adm_products',
+                            'cat_id' => '1');
+                
             case 'coffee':
-                $params['cat_id'] = '2'; 
-                break; 
+                return array('mod' => 'adm_products',
+                            'cat_id' => '2');
+                  
             default:
-                $params['mod'] = '404';
-            break;
-            } 
-            break;
+                return array('mod' => '404');
+            }
+            
         default: 
-            $params['mod'] = '404';
+            return array('mod' => '404');
         }
-    break;
+        
     default:
-        $params['mod'] = '404';
+        return array('mod' => '404');
     }
-    return $params;
 }
 
 
 /* Функция для формирования URL в зависимости от значения настройки */
 function mk_url($params)
 {
-    $query = (array_key_exists('get_query', $params) || 
-                array_key_exists('post_query', $params));
+    $query = (isset($params['get_query']) || 
+                isset($params['post_query']));
     $clean_url_enable = global_conf()['clean_url_enable'];
     
-    if(!$query)
-        if($clean_url_enable)
+    if(!$query && $clean_url_enable)
             return url_encode($params);
         
     $url = global_conf()['http_root_path'];
